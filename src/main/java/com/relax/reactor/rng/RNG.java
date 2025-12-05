@@ -10,17 +10,9 @@ import static com.relax.reactor.config.Util.EPSILON;
 @Service
 public class RNG {
 
-    private final UniformRandomProvider mersenneTwister;
+    private UniformRandomProvider mersenneTwister;
 
-    public RNG(UniformRandomProvider mersenneTwister) {
-        this.mersenneTwister = mersenneTwister;
-    }
-
-    public UniformRandomProvider getMersenneTwister() {
-        return mersenneTwister;
-    }
-
-    public Integer getWeightedInt(List<Integer> items, List<Double> chances) {
+    public Integer getWeightedIndex(List<Integer> items, List<Double> chances) {
         if (items == null || chances == null) {
             throw new IllegalArgumentException("Both items and chances lists must not be null");
         }
@@ -36,34 +28,32 @@ public class RNG {
 
         // Normalize chances if needed
         double total = chances.stream().mapToDouble(Double::doubleValue).sum();
-        final List<Double> normalizedChances;
+
 
         if (Math.abs(total - 1.0) > EPSILON) {
             final double finalTotal = total;
-            normalizedChances = chances.stream().map(chance -> chance / finalTotal).toList();
-        } else {
-            normalizedChances = chances;
+            chances = chances.stream().map(chance -> chance / finalTotal).toList();
         }
 
         double randomValue = mersenneTwister.nextDouble();
         double cumulativeProbability = 0.0;
 
         for (int i = 0; i < items.size(); i++) {
-            cumulativeProbability += normalizedChances.get(i);
+            cumulativeProbability += chances.get(i);
             if (randomValue < cumulativeProbability) {
-                return items.get(i);
+                return i; // Return the index instead of the item
             }
         }
 
-        return items.get(items.size() - 1);
+        return -1;
     }
 
-    public Integer getUniform(List<Integer> items) {
+    public int getUniformIndex(List<Integer> items) {
         if (items == null || items.isEmpty()) {
             throw new IllegalArgumentException("Items list cannot be null or empty");
         }
 
-        int randomIndex = mersenneTwister.nextInt(items.size());
-        return items.get(randomIndex);
+        // Return a random index between 0 and items.size()-1
+        return mersenneTwister.nextInt(items.size());
     }
 }
