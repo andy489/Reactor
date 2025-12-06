@@ -1,13 +1,11 @@
 package com.relax.reactor.service.gamelogic.dto;
 
-import com.relax.reactor.service.gamelogic.core.SlotGameStickyData;
+import com.relax.reactor.service.gamelogic.core.data.SlotGameStickyData;
 import com.relax.reactor.service.gamelogic.dto.payout.BaseDto;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
 import java.io.Serializable;

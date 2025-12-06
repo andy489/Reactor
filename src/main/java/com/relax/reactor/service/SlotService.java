@@ -2,7 +2,7 @@ package com.relax.reactor.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.relax.reactor.rng.RNG;
-import com.relax.reactor.service.gamelogic.core.SlotContext;
+import com.relax.reactor.service.gamelogic.core.data.SlotContext;
 import com.relax.reactor.service.gamelogic.dto.SettingsDto;
 import com.relax.reactor.service.gamelogic.dto.SlotGameDto;
 import com.relax.reactor.service.gamelogic.slot.MySlotGame;

@@ -1,6 +1,6 @@
 package com.relax.reactor.service.gamelogic.dto;
 
-import com.relax.reactor.service.gamelogic.core.ReelSet;
+import com.relax.reactor.service.gamelogic.core.data.ReelSet;
 import com.relax.reactor.service.gamelogic.enumerated.PayTableType;
 import com.relax.reactor.service.gamelogic.enumerated.Strategy;
 import com.relax.reactor.service.gamelogic.enumerated.WildMultipliersAggregationType;

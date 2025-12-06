@@ -1,7 +1,7 @@
-package com.relax.reactor.service.gamelogic.core;
+package com.relax.reactor.service.gamelogic.core.data;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.relax.reactor.rng.RNG;
+import com.relax.reactor.service.gamelogic.core.SpinHandlers;
 import com.relax.reactor.service.gamelogic.enumerated.PayTableType;
 import com.relax.reactor.service.gamelogic.enumerated.Strategy;
 import com.relax.reactor.service.gamelogic.enumerated.WildMultipliersAggregationType;
@@ -55,6 +55,7 @@ public class SlotContext extends SpinHandlers implements Serializable {
 
     protected PayTableType payTableType;
     protected Map<Integer, TreeMap<Integer, Double>> payTable;
+    protected List<List<Integer>> neighbors;
 
     protected Strategy strategy;
     protected Double minStake;

@@ -1,4 +1,4 @@
-package com.relax.reactor.service.gamelogic.core;
+package com.relax.reactor.service.gamelogic.core.data;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

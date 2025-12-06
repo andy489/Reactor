@@ -4,7 +4,7 @@ import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 import java.lang.annotation.*;
 
-import static com.relax.reactor.config.UtilConstants.EPSILON;
+import static com.relax.reactor.service.gamelogic.core.util.UtilConstants.EPSILON;
 
 @Documented
 @Constraint(validatedBy = MultipleOfMinStakeValidator.class)

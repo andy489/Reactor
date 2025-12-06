@@ -47,7 +47,7 @@
   },
   "minMatch": 5,
   "strategy": "CLUSTERS_PAYS",
-  "neighbours": [
+  "neighbors": [
     [-1, 0],
     [0, 1],
     [1, 0],

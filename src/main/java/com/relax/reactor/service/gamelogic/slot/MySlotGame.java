@@ -1,9 +1,11 @@
 package com.relax.reactor.service.gamelogic.slot;
 
-import com.relax.reactor.service.gamelogic.core.SlotContext;
-import com.relax.reactor.service.gamelogic.core.SlotGameStickyData;
+import com.relax.reactor.service.gamelogic.core.data.SlotContext;
+import com.relax.reactor.service.gamelogic.core.data.SlotGameStickyData;
 import com.relax.reactor.service.gamelogic.core.SlotSpinProcessor;
 import com.relax.reactor.service.gamelogic.dto.SlotGameDto;
+import com.relax.reactor.service.gamelogic.processors.P01_PopulateScreenProcessor;
+import com.relax.reactor.service.gamelogic.processors.P02_ClusterPayoutStrategyProcessor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -20,21 +22,48 @@ public class MySlotGame extends SlotContext {
 
     public MySlotGame() {
         super();
+    }
 
-        P01_SpinTheReelsProcessor p01_SpinTheReelsProcessor = new P01_SpinTheReelsProcessor();
+    private List<SlotSpinProcessor> createAndArrangeProcessors() {
+        List<SlotSpinProcessor> spinProcessors = new ArrayList<>();
 
-        super.getSpinProcessors().add(p01_SpinTheReelsProcessor);
+        // Create spin processors
+        P01_PopulateScreenProcessor p01_PopulateScreenProcessor = new P01_PopulateScreenProcessor();
+
+        P02_ClusterPayoutStrategyProcessor p02_ClusterPayoutStrategyProcessor =
+                new P02_ClusterPayoutStrategyProcessor()
+                        .setPayouts(payTable)
+                        .setStrategy(strategy)
+                        .setMinMatch(minMatch)
+                        .setWildMultipliers(wildMultipliers)
+                        .setWildMultipliersAggregations(wildMultipliersAggregations)
+                        .setExcludeMatchSymbols(new ArrayList<>())
+                        .setNeighbors(neighbors);
+        // EO: Create Spin Processors
+
+        // Arrange Spin Processors
+        spinProcessors.add(p01_PopulateScreenProcessor);
+        spinProcessors.add(p02_ClusterPayoutStrategyProcessor);
+        // EO: Arrange Spin Processors
+
+        return spinProcessors;
     }
 
     public SlotGameDto createSlotSpin(List<Integer> states, int reelsSetIndex, List<Integer> reelsStopPositions,
                                       double stake, SlotGameStickyData slotGameStickyData, int recursionLevel) {
+
+        // Ensure processors are created before use
+        if (this.spinProcessors == null || this.spinProcessors.isEmpty()) {
+            this.spinProcessors = createAndArrangeProcessors();
+        }
 
         SlotGameDto slotGameDto = new SlotGameDto()
                 .setReelStopPositions(reelsStopPositions)
                 .setPayoutData(new ArrayList<>())
                 .setReelsSetIndex(reelsSetIndex)
                 .setStakeMultiplier(1.0)
-                .setRecursionLevel(recursionLevel);
+                .setRecursionLevel(recursionLevel)
+                .setGridDim(this.gridDim);
 
         slotGameDto.setWinAmount(0.0d);
 

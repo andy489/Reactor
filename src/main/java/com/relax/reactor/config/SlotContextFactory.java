@@ -2,7 +2,7 @@ package com.relax.reactor.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.relax.reactor.rng.RNG;
-import com.relax.reactor.service.gamelogic.core.SlotContext;
+import com.relax.reactor.service.gamelogic.core.data.SlotContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

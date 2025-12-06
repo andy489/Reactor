@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.relax.reactor.config.UtilConstants.EPSILON;
+import static com.relax.reactor.service.gamelogic.core.util.UtilConstants.EPSILON;
 
 @Service
 public class RNG {
