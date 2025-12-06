@@ -1,6 +1,7 @@
 package com.relax.reactor.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,9 +21,11 @@ public class JacksonConfig {
     @Bean
     public ObjectMapper objectMapper(Jackson2ObjectMapperBuilder builder) {
 
-        ObjectMapper objectMapper = builder.build();
-        objectMapper.findAndRegisterModules();
+        ObjectMapper mapper = builder.build();
 
-        return objectMapper;
+        mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+        mapper.findAndRegisterModules();
+
+        return mapper;
     }
 }

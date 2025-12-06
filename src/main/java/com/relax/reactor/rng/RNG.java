@@ -1,18 +1,24 @@
 package com.relax.reactor.rng;
 
 import org.apache.commons.rng.UniformRandomProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.relax.reactor.config.Util.EPSILON;
+import static com.relax.reactor.config.UtilConstants.EPSILON;
 
 @Service
 public class RNG {
 
-    private UniformRandomProvider mersenneTwister;
+    private final UniformRandomProvider mersenneTwister;
 
-    public Integer getWeightedIndex(List<Integer> items, List<Double> chances) {
+    @Autowired
+    public RNG(UniformRandomProvider mersenneTwister) {
+        this.mersenneTwister = mersenneTwister;
+    }
+
+    public int getWeightedIndex(List<Integer> items, List<Double> chances) {
         if (items == null || chances == null) {
             throw new IllegalArgumentException("Both items and chances lists must not be null");
         }
@@ -55,5 +61,17 @@ public class RNG {
 
         // Return a random index between 0 and items.size()-1
         return mersenneTwister.nextInt(items.size());
+    }
+
+    public int getUniformIndex(int start, int end) { // end is inclusive
+        if (start > end) {
+            throw new IllegalArgumentException("Start must be less than or equal to end");
+        }
+        if (start == end) {
+            return start;
+        }
+
+        int range = end - start + 1;
+        return start + mersenneTwister.nextInt(range);
     }
 }

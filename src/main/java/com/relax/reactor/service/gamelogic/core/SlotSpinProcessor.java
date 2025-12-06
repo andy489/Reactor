@@ -9,7 +9,7 @@ import java.util.List;
 public interface SlotSpinProcessor extends Serializable {
 
     void processSpin(SlotGameDto spinData,
-                     BaseSlot myGame,
+                     SlotContext myGame,
                      List<Integer> myGameStates,
                      int reelsSetIndex,
                      List<Integer> stopPositions,

@@ -1,5 +1,7 @@
 package com.relax.reactor.service.gamelogic.core;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.relax.reactor.rng.RNG;
 import com.relax.reactor.service.gamelogic.enumerated.PayTableType;
 import com.relax.reactor.service.gamelogic.enumerated.Strategy;
 import com.relax.reactor.service.gamelogic.enumerated.WildMultipliersAggregationType;
@@ -8,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 
 import java.io.Serializable;
 import java.util.List;
@@ -18,8 +21,11 @@ import java.util.TreeMap;
 @Setter
 @Accessors(chain = true)
 @ToString(callSuper = true)
+@SuperBuilder
 @NoArgsConstructor
-public class BaseSlot extends SpinHandlers implements Serializable {
+public class SlotContext extends SpinHandlers implements Serializable {
+
+    protected transient RNG rng;
 
     protected String gameName;
     protected Integer slotId;

@@ -50,10 +50,6 @@ public class SlotGameStickyData implements Serializable {
         this.stickyTileIds.add(pos, stickyTileId);
     }
 
-    public Boolean isEmpty() {
-        return (this.stickyReels.isEmpty() && this.stickyPos.isEmpty() && this.stickyTileIds.isEmpty());
-    }
-
     public int findSticky(int stickyReel, int stickyPos) {
         for (int i = 0; i < stickyReels.size(); i++) {
             if (this.stickyReels.get(i) == stickyReel && this.stickyPos.get(i) == stickyPos) {
@@ -127,7 +123,7 @@ public class SlotGameStickyData implements Serializable {
 
         int size = primaryList.size();
 
-        // Validate all non-null lists have same size
+        // Validate all non-null lists have the same size
         for (List<T> list : lists) {
             if (list != null && list.size() != size) {
                 throw new IllegalArgumentException("All lists must have the same size");
