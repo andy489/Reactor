@@ -16,12 +16,10 @@ public class SlotService {
 
     private final ObjectMapper mapper;
     private final SlotContext slotContext;
-    private final RNG rng;
 
     public SlotService(ObjectMapper mapper, SlotContext slotContext, RNG rng) {
         this.mapper = mapper;
         this.slotContext = slotContext;
-        this.rng = rng;
     }
 
     public Optional<SettingsDto> settings() {
@@ -29,20 +27,22 @@ public class SlotService {
         return Optional.of(settingsDto);
     }
 
-    public Optional<SlotGameDto> spin(double stake, List<Integer> states) {
+    public Optional<List<SlotGameDto>> spin(double stake, List<Integer> states) {
 
         MySlotGame mySlotGame = new MySlotGame();
 
         org.springframework.beans.BeanUtils.copyProperties(slotContext, mySlotGame,
                 "spinProcessors", "postSpinProcessors");
 
-        if(mySlotGame.isProcessorsNeedInitialization()){
+        if (mySlotGame.isProcessorsNeedInitialization()) {
             mySlotGame.initializeProcessorsIfNeeded();
             mySlotGame.setProcessorsNeedInitialization(false);
         }
 
-        SlotGameDto slotGameDto = mapper.convertValue(mySlotGame.createMainSlotSpin(stake, states), SlotGameDto.class);
+        SlotGameDto slotSpin = mySlotGame.createMainSlotSpin(stake, states);
 
-        return Optional.of(slotGameDto);
+        List<SlotGameDto> linearizedResponse = slotSpin.linearizeWithDepth();
+
+        return Optional.of(linearizedResponse);
     }
 }

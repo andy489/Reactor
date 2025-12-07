@@ -5,6 +5,7 @@ import com.relax.reactor.service.gamelogic.processors.P01_PopulateScreenProcesso
 import com.relax.reactor.service.gamelogic.processors.P02_StickyApplierProcessor;
 import com.relax.reactor.service.gamelogic.processors.P03_ClusterPayoutStrategyProcessor;
 import com.relax.reactor.service.gamelogic.processors.P04_AvalancheReactorProcessor;
+import com.relax.reactor.service.gamelogic.processors.P05_SlotSumPayoutsProcessor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -48,6 +49,8 @@ public class MySlotGame extends SlotContext {
         P04_AvalancheReactorProcessor p04_AvalancheReactorProcessor = new P04_AvalancheReactorProcessor()
                 .setReactionReelSetIndexes(reactionGameReelSetIndexes)
                 .setReactionReelSetChances(reactionGameReelSetChances);
+
+        P05_SlotSumPayoutsProcessor p05_SlotSumPayoutsProcessor = new P05_SlotSumPayoutsProcessor();
         // EO: Create Spin Processors
 
         // Arrange Spin Processors
@@ -55,6 +58,7 @@ public class MySlotGame extends SlotContext {
         spinProcessors.add(p02_StickyApplierProcessor);
         spinProcessors.add(p03_ClusterPayoutStrategyProcessor);
         spinProcessors.add(p04_AvalancheReactorProcessor);
+        spinProcessors.add(p05_SlotSumPayoutsProcessor);
         // EO: Arrange Spin Processors
     }
 }

@@ -30,7 +30,7 @@ public class SlotController {
     }
 
     @GetMapping("/spin")
-    public ResponseEntity<SlotGameDto> spin(
+    public ResponseEntity<List<SlotGameDto>> spin(
             @NotNull(message = "Stake is required")
             @Positive(message = "Stake must be positive")
             @MultipleOfMinStake(minStake = 0.10, message = "Stake must be in multiples of $0.10")
