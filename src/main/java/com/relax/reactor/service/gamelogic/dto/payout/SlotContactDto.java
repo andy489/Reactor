@@ -6,16 +6,12 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-import java.io.Serial;
 import java.util.List;
 
 @Getter
 @Setter
 @Accessors(chain = true)
 public class SlotContactDto extends BaseDto {
-
-    @Serial
-    private static final long serialVersionUID = 1L;
 
     private List<Integer> floatIds;
     private List<Integer> payoutSymbols;

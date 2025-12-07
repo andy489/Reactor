@@ -45,6 +45,7 @@
 
     "10": {"5": 0.0}
   },
+  "payTableType": "INTERVAL_BASED",
   "minMatch": 5,
   "strategy": "CLUSTERS_PAYS",
   "neighbors": [

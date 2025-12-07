@@ -149,6 +149,8 @@ public class ClustersPaysStrategyCalculator {
                             contacts.getContact2DimSymbols().add(contact2DimSym);
 
                             contacts.getLocalMultipliers().add(wildMultipliersAggregated);
+
+                            contacts.getPayouts().add(singularPay);
                             contacts.getMultipliedPayouts().add(winAmount);
                         }
                     }

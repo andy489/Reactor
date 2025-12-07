@@ -36,6 +36,11 @@ public class SlotService {
         org.springframework.beans.BeanUtils.copyProperties(slotContext, mySlotGame,
                 "spinProcessors", "postSpinProcessors");
 
+        if(mySlotGame.isProcessorsNeedInitialization()){
+            mySlotGame.initializeProcessorsIfNeeded();
+            mySlotGame.setProcessorsNeedInitialization(false);
+        }
+
         SlotGameDto slotGameDto = mapper.convertValue(mySlotGame.createMainSlotSpin(stake, states), SlotGameDto.class);
 
         return Optional.of(slotGameDto);
