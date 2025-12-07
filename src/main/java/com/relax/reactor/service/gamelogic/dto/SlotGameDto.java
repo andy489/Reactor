@@ -1,5 +1,7 @@
 package com.relax.reactor.service.gamelogic.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.relax.reactor.service.gamelogic.core.data.SlotGameStickyData;
 import com.relax.reactor.service.gamelogic.dto.payout.BaseDto;
 import lombok.EqualsAndHashCode;
@@ -11,15 +13,28 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = false)
+@JsonPropertyOrder({"_links",
+        "stake", "userChoice",
+        "cumulativeWinAmount", "stashedCumulativeWinAmountBeforeGambleChoice",
+        "accumulatedWinAmount", "winAmount",
+        "gambleMultiplier",
+        "spinNum", "totalSpins",
+        "reelsSetIndex", "reelStopPositions",
+        "gridDim", "grid",
+        "slotGameStickyData", "preSpinStates", "postSpinStates",
+        "stakeMultiplier", "recursionLevel", "payoutData"})
 public class SlotGameDto extends BaseDto implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
+
+    private Double stake;
 
     private Integer reelsSetIndex;
     private List<Integer> reelStopPositions;
@@ -38,53 +53,44 @@ public class SlotGameDto extends BaseDto implements Serializable {
     private Double stakeMultiplier = 1.0;
 
     private Integer recursionLevel;
+
+    private Double accumulatedWinAmount;
     private Double cumulativeWinAmount;
 
     private List<BaseDto> payoutData;
 
+    private Double stashedCumulativeWinAmountBeforeGambleChoice;
+    private Integer gambleMultiplier = -1; // -1 (no choice made); 0 (gamble and lost); 1 (no gamble); 2 (gamble and won)
+
+    @JsonProperty("_links")
+    private Map<String, String> links;
+
+    private Integer userChoice; // User's gamble choice: 1 for COLLECT, 2 for GAMBLE
+
     public SlotGameDto() {
     }
 
-    public List<SlotGameDto> linearizeWithDepth() {
+    public List<SlotGameDto> linearize() {
         List<SlotGameDto> result = new ArrayList<>();
 
-        collectWithDepth(this, result, 1);
-
-        int totalSpins = result.size();
-        for (int i = 1; i <= totalSpins; i++) {
-            result.get(i - 1).setTotalSpins(totalSpins);
-        }
-
-        calculateCumulativeWinsBackwards(result);
+        dfs(this, result);
 
         return result;
     }
 
-    private void collectWithDepth(SlotGameDto dto, List<SlotGameDto> result, int depth) {
+    private void dfs(SlotGameDto dto, List<SlotGameDto> result) {
         if (dto == null) {
             return;
         }
 
-        dto.setSpinNum(depth);
         result.add(dto);
 
         if (dto.getPayoutData() != null) {
             for (BaseDto baseDto : dto.getPayoutData()) {
                 if (baseDto instanceof SlotGameDto) {
-                    collectWithDepth((SlotGameDto) baseDto, result, depth + 1);
+                    dfs((SlotGameDto) baseDto, result);
                 }
             }
-        }
-    }
-
-    private void calculateCumulativeWinsBackwards(List<SlotGameDto> linearizedSlotGameDto) {
-
-        double cumulativeWinAmount = 0.0d;
-        for (SlotGameDto currDto : linearizedSlotGameDto) {
-            Double currDtoWinAmount = currDto.getWinAmount();
-            cumulativeWinAmount += currDtoWinAmount != null ? currDtoWinAmount : 0.0d;
-
-            currDto.setCumulativeWinAmount(cumulativeWinAmount);
         }
     }
 }

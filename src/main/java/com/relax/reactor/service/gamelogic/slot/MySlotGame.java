@@ -6,6 +6,8 @@ import com.relax.reactor.service.gamelogic.processors.P02_StickyApplierProcessor
 import com.relax.reactor.service.gamelogic.processors.P03_ClusterPayoutStrategyProcessor;
 import com.relax.reactor.service.gamelogic.processors.P04_AvalancheReactorProcessor;
 import com.relax.reactor.service.gamelogic.processors.P05_SlotSumPayoutsProcessor;
+import com.relax.reactor.service.gamelogic.processors.P06_PropertiesAdjustmentsProcessor;
+import com.relax.reactor.service.gamelogic.processors.P07_GambleChoicePostSpinProcessor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -51,14 +53,26 @@ public class MySlotGame extends SlotContext {
                 .setReactionReelSetChances(reactionGameReelSetChances);
 
         P05_SlotSumPayoutsProcessor p05_SlotSumPayoutsProcessor = new P05_SlotSumPayoutsProcessor();
-        // EO: Create Spin Processors
 
-        // Arrange Spin Processors
+        P06_PropertiesAdjustmentsProcessor p06_PropertiesAdjustmentsProcessor =
+                new P06_PropertiesAdjustmentsProcessor();
+        // EO: Create spin processors
+
+        // Arrange spin processors
         spinProcessors.add(p01_PopulateScreenProcessor);
         spinProcessors.add(p02_StickyApplierProcessor);
         spinProcessors.add(p03_ClusterPayoutStrategyProcessor);
         spinProcessors.add(p04_AvalancheReactorProcessor);
         spinProcessors.add(p05_SlotSumPayoutsProcessor);
-        // EO: Arrange Spin Processors
+        spinProcessors.add(p06_PropertiesAdjustmentsProcessor);
+        // EO: Arrange spin processors
+
+        // Create post-spin processors (gambles and other choices)
+        P07_GambleChoicePostSpinProcessor p07_GambleChoicePostSpinProcessor = new P07_GambleChoicePostSpinProcessor();
+        // EO: Create post-spin processors
+
+        // Arrange post-spin Processors
+        postSpinProcessors.add(p07_GambleChoicePostSpinProcessor);
+        // EO: Arrange post-spin Processors
     }
 }

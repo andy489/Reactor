@@ -3,7 +3,9 @@ package com.relax.reactor.controller;
 import com.relax.reactor.service.SlotService;
 import com.relax.reactor.service.gamelogic.dto.SettingsDto;
 import com.relax.reactor.service.gamelogic.dto.SlotGameDto;
+import com.relax.reactor.validation.MaxBetAmount;
 import com.relax.reactor.validation.MultipleOfMinStake;
+import com.relax.reactor.validation.ValidGambleChoice;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
@@ -25,7 +27,7 @@ public class SlotController {
     private SlotService slotService;
 
     @GetMapping("/settings")
-    public ResponseEntity<SettingsDto> settings(){
+    public ResponseEntity<SettingsDto> settings() {
         return ResponseEntity.of(slotService.settings());
     }
 
@@ -34,11 +36,17 @@ public class SlotController {
             @NotNull(message = "Stake is required")
             @Positive(message = "Stake must be positive")
             @MultipleOfMinStake(minStake = 0.10, message = "Stake must be in multiples of $0.10")
+            @MaxBetAmount (maxAmount = 100.00)
             Double stake,
 
             @RequestParam(value = "states", required = false)
             List<Integer> states
     ) {
         return ResponseEntity.of(slotService.spin(stake, states));
+    }
+
+    @GetMapping("/gamble")
+    public ResponseEntity<List<SlotGameDto>> gamble(@ValidGambleChoice Integer choice) {
+        return ResponseEntity.of(slotService.gamble(choice));
     }
 }
