@@ -20,7 +20,7 @@ public class P07_GambleChoicePostSpinProcessor implements SlotSpinProcessor {
         Integer userChoice = spinData.getUserChoice();
 
         switch (userChoice) {
-            case 1: {
+            case 1 -> {
                 // COLLECT
                 spinData.setGambleMultiplier(1);
 
@@ -29,10 +29,8 @@ public class P07_GambleChoicePostSpinProcessor implements SlotSpinProcessor {
 
                 spinData.setCumulativeWinAmount(stashedCumulativeWinAmountBeforeGambleChoice);
                 spinData.setStashedCumulativeWinAmountBeforeGambleChoice(null);
-
-                break;
             }
-            case 2: {
+            case 2 -> {
                 // GAMBLE
                 RNG rng = slotContext.getRng();
 
@@ -56,11 +54,9 @@ public class P07_GambleChoicePostSpinProcessor implements SlotSpinProcessor {
 
                     spinData.setStashedCumulativeWinAmountBeforeGambleChoice(null);
                 }
-                break;
             }
-            default: {
-                throw new IllegalArgumentException("Invalid gamble choice");
-            }
+            default -> throw new IllegalArgumentException("Invalid gamble choice");
+
         }
     }
 }

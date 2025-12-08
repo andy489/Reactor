@@ -3,6 +3,7 @@ package com.relax.reactor.service.gamelogic.core.data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
@@ -14,6 +15,7 @@ import java.util.List;
 @Setter
 @Accessors(chain = true)
 @EqualsAndHashCode
+@ToString
 public class SlotGameStickyData implements Serializable {
 
     private List<Integer> stickyReels;

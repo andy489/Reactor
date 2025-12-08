@@ -2,6 +2,7 @@ package com.relax.reactor.service.gamelogic.dto.payout;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import java.util.List;
 @Getter
 @Setter
 @Accessors(chain = true)
+@ToString(callSuper = true)
 public class SlotExplodeFallDto extends BaseDto {
 
     private List<Integer> holdReels;

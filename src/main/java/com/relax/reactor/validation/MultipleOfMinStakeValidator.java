@@ -44,8 +44,8 @@ public class MultipleOfMinStakeValidator implements ConstraintValidator<Multiple
         if (!isMultipleOf(stakeValue)) {
 
             context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate(String.format("Stake %.2f must be a multiple of %.2f",
-                            stakeValue, minStake)).addConstraintViolation();
+            context.buildConstraintViolationWithTemplate(String.format("Stake must be a multiple of %.2f", minStake))
+                    .addConstraintViolation();
 
             return false;
         }

@@ -6,6 +6,7 @@ import com.relax.reactor.service.gamelogic.dto.SlotGameDto;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 import java.io.Serial;
@@ -27,6 +28,7 @@ import java.io.Serializable;
         @JsonSubTypes.Type(value = SlotExplodeFallDto.class, name = "explode_fall"),
         @JsonSubTypes.Type(value = SlotGameDto.class, name = "slot_game")
 })
+@ToString
 public class BaseDto implements Serializable {
 
     @Serial

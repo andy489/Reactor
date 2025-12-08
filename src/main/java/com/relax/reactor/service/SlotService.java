@@ -1,17 +1,25 @@
 package com.relax.reactor.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.relax.reactor.config.SlotContextFactory;
 import com.relax.reactor.exception.GambleNotAvailableException;
 import com.relax.reactor.exception.PendingGambleException;
+import com.relax.reactor.rng.RNG;
 import com.relax.reactor.service.gamelogic.core.SlotSpinProcessor;
 import com.relax.reactor.service.gamelogic.core.data.SlotContext;
 import com.relax.reactor.service.gamelogic.dto.SettingsDto;
 import com.relax.reactor.service.gamelogic.dto.SlotGameDto;
+import com.relax.reactor.service.gamelogic.dto.SlotStatsDto;
 import com.relax.reactor.service.gamelogic.slot.MySlotGame;
+import com.relax.reactor.service.statistics.RunningStat;
 import org.springframework.stereotype.Service;
 
+import java.text.NumberFormat;
+import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
+
+import static com.relax.reactor.service.gamelogic.core.util.HelperGameLogicMethods.roundToPrecision;
 
 @Service
 public class SlotService {
@@ -19,13 +27,18 @@ public class SlotService {
     private final ObjectMapper mapper;
     private final SlotContext slotContext;
     private final SpinResultLogger logger;
+    private final RNG rng;
+    private final SlotContextFactory slotContextFactory;
 
     public SlotService(ObjectMapper mapper,
                        SlotContext slotContext,
-                       SpinResultLogger logger) {
+                       SpinResultLogger logger,
+                       RNG rng, SlotContextFactory slotContextFactory) {
         this.mapper = mapper;
         this.slotContext = slotContext;
         this.logger = logger;
+        this.rng = rng;
+        this.slotContextFactory = slotContextFactory;
     }
 
     public Optional<SettingsDto> settings() {
@@ -159,5 +172,64 @@ public class SlotService {
             firstSpin.getLinks().put("SPIN", "/slot/spin?stake=0.10");
             firstSpin.getLinks().put("SETTINGS", "/slot/settings");
         }
+    }
+
+    public Optional<SlotStatsDto> runSimulation(Integer spins, Double stake) {
+
+        RunningStat runningStat = new RunningStat(true);
+
+        long startTime = System.currentTimeMillis();
+        for (int i = 0; i < spins; i++) {
+            MySlotGame mySlotGame = MySlotGame.createWithRNG(rng, slotContext);
+            SlotGameDto mainSlotSpin = mySlotGame.createMainSlotSpin(stake, null);
+            Double cumulativeWinAmount = mainSlotSpin.getCumulativeWinAmount();
+
+            // System.out.println(mainSlotSpin.getCumulativeWinAmount());
+
+            runningStat.push(roundToPrecision(cumulativeWinAmount / stake));
+        }
+        long endTime = System.currentTimeMillis();
+        long totalTime = endTime - startTime;
+
+        SlotStatsDto slotStatsDto = new SlotStatsDto()
+                .setRtp(formatAsPercentage(runningStat.mean()))
+                .setHitRate(roundToPrecision(runningStat.hitRate(),4))
+                .setWinRate(roundToPrecision(runningStat.winRate(),4))
+                .setStake(stake)
+                .setTotalSpinsCount(spins)
+                .setMedian(roundToPrecision(runningStat.median(),4))
+                .setStandardDeviation(roundToPrecision(runningStat.standardDeviation(),4))
+                .setVariance(roundToPrecision(runningStat.variance(),4))
+                .setTimeElapsed(formatDuration(totalTime));
+
+        return Optional.of(slotStatsDto);
+    }
+
+    public static String formatDuration(long totalTimeMillis) {
+        Duration duration = Duration.ofMillis(totalTimeMillis);
+
+        long hours = duration.toHours();
+        long minutes = duration.toMinutesPart();
+        long seconds = duration.toSecondsPart();
+        long millis = duration.toMillisPart();
+
+        if (hours > 0) {
+            return String.format("%d h %d min %d sec", hours, minutes, seconds);
+        } else if (minutes > 0) {
+            return String.format("%d min %d sec", minutes, seconds);
+        } else if (seconds > 0) {
+            return String.format("%d.%03d seconds", seconds, millis);
+        } else {
+            return String.format("%d ms", millis);
+        }
+    }
+
+    private static final NumberFormat PERCENT_FORMAT = NumberFormat.getPercentInstance();
+    static {
+        PERCENT_FORMAT.setMaximumFractionDigits(4);
+    }
+
+    private String formatAsPercentage(double value) {
+        return PERCENT_FORMAT.format(value);
     }
 }

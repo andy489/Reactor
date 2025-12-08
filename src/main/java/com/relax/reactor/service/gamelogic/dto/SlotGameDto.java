@@ -7,6 +7,7 @@ import com.relax.reactor.service.gamelogic.dto.payout.BaseDto;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 import java.io.Serial;
@@ -29,6 +30,7 @@ import java.util.Map;
         "gridDim", "grid",
         "slotGameStickyData", "preSpinStates", "postSpinStates",
         "stakeMultiplier", "recursionLevel", "payoutData"})
+@ToString(callSuper = true)
 public class SlotGameDto extends BaseDto implements Serializable {
 
     @Serial

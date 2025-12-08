@@ -9,12 +9,14 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -105,24 +107,57 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
-    // Handle type mismatch (e.g., "asd" cannot be converted to Integer)
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    public ResponseEntity<Map<String, Object>> handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
-        Map<String, Object> errorResponse = new LinkedHashMap<>();
+    public ResponseEntity<Map<String, Object>> handleTypeMismatch(
+            MethodArgumentTypeMismatchException ex) {
 
+        Map<String, Object> errorResponse = new LinkedHashMap<>();
         errorResponse.put("timestamp", ZonedDateTime.now().format(formatter));
         errorResponse.put("status", HttpStatus.BAD_REQUEST.value());
         errorResponse.put("error", "Bad Request");
 
-        assert ex.getRequiredType() != null;
-        errorResponse.put("message", "Invalid value for parameter '" + ex.getName() +
-                "'. Expected type: " + ex.getRequiredType().getSimpleName() + "Domain: {1,2}");
+        String paramName = ex.getName();
 
-        Map<String, String> links = new HashMap<>();
-        links.put("COLLECT", "/slot/gamble?choice=1");
-        links.put("GAMBLE", "/slot/gamble?choice=2");
-        errorResponse.put("_links", links);
+        String message = createHelpfulMessage(paramName, ex.getValue());
+        errorResponse.put("message", message);
+
+        Map<String, Object> examples = new HashMap<>();
+
+        switch (paramName) {
+            case "spins":
+                examples.put("validExamples", Arrays.asList("1000", "50000", "1000000"));
+                examples.put("constraints", "Integer between 1 and 3,000,000");
+                break;
+            case "stake":
+                examples.put("validExamples", Arrays.asList("0.10", "1.50", "50.00"));
+                examples.put("constraints", "Decimal number, multiple of 0.10, up to 100.00");
+                break;
+            case "choice":
+                examples.put("validExamples", Arrays.asList("1", "2"));
+                examples.put("constraints", "Must be 1 (COLLECT) or 2 (GAMBLE)");
+                break;
+        }
+
+        if (!examples.isEmpty()) {
+            errorResponse.put("examples", examples);
+        }
 
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    private String createHelpfulMessage(String paramName, Object invalidValue) {
+        String baseMessage = String.format(
+                "The value '%s' is not valid for parameter '%s'.",
+                invalidValue != null ? invalidValue.toString() : "null",
+                paramName
+        );
+
+        return switch (paramName) {
+            case "spins" -> baseMessage + " Please provide a whole number between 1 and 3,000,000.";
+            case "stake" ->
+                    baseMessage + " Please provide a decimal amount in multiples of $0.10 (e.g., 0.10, 1.50, 50.00).";
+            case "choice" -> baseMessage + " Please provide either 1 (to collect) or 2 (to gamble).";
+            default -> baseMessage + " Please check the parameter format.";
+        };
     }
 }

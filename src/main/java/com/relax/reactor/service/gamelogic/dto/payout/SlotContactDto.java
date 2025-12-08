@@ -4,6 +4,7 @@ import com.relax.reactor.service.gamelogic.core.data.GridPosition;
 import com.relax.reactor.service.gamelogic.enumerated.MatchType;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.List;
 @Getter
 @Setter
 @Accessors(chain = true)
+@ToString(callSuper = true)
 public class SlotContactDto extends BaseDto {
 
     private List<Integer> floatIds;
