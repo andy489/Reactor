@@ -19,6 +19,8 @@ public class RunningStat {
 
     private Integer n;
 
+    private Double maxStakeMultiplier;
+
     private Integer hitsCount;
     private Integer winsCount;
 
@@ -36,6 +38,8 @@ public class RunningStat {
     public RunningStat(boolean median) {
         hitsCount = 0;
         winsCount = 0;
+
+        maxStakeMultiplier = 0.0;
 
         n = 0;
         this.median = median;
@@ -56,6 +60,10 @@ public class RunningStat {
 
     public void push(double x) {
         n++;
+
+        if (x > maxStakeMultiplier) {
+            maxStakeMultiplier = x;
+        }
 
         if (median) {
             maxHeap.offer(x);

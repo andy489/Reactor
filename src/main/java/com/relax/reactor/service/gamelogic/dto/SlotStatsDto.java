@@ -12,7 +12,7 @@ import java.io.Serializable;
 @Setter
 @Accessors(chain = true)
 @JsonPropertyOrder({
-        "rtp", "hitRate", "winRate", "stake", "median", "variance", "standardDeviation",
+        "rtp", "maxStakeMultiplier", "hitRate", "winRate", "stake", "median", "variance", "standardDeviation",
         "winRate", "hitRate", "randomVariable", "timeElapsed", "totalSpinsCount"
 })
 public class SlotStatsDto implements Serializable {
@@ -21,6 +21,8 @@ public class SlotStatsDto implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private String rtp; // equivalent to RTP
+
+    private Double maxStakeMultiplier;
 
     private Double hitRate; // win > 0
     private Double winRate; // win > stake
@@ -34,5 +36,5 @@ public class SlotStatsDto implements Serializable {
 
     private String randomVariable = "STAKE_MULTIPLIER";
     private String timeElapsed;
-    private Integer totalSpinsCount;
+    private String totalSpinsCount;
 }

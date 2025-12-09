@@ -101,7 +101,7 @@ public class RNG {
         for (int i = 0; i < items.size(); i++) {
             cumulativeProbability += chances.get(i);
             if (randomValue < cumulativeProbability) {
-                return i;
+                return items.get(i);
             }
         }
 

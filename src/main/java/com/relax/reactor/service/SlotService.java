@@ -15,6 +15,7 @@ import com.relax.reactor.service.gamelogic.slot.MySlotGame;
 import com.relax.reactor.service.statistics.RunningStat;
 import org.springframework.stereotype.Service;
 
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.time.Duration;
 import java.util.List;
@@ -26,7 +27,7 @@ import static com.relax.reactor.service.gamelogic.core.util.HelperGameLogicMetho
 public class SlotService {
 
     private static final NumberFormat PERCENT_FORMAT = NumberFormat.getPercentInstance();
-
+    private static final DecimalFormat df = new DecimalFormat("#,###.##");
     {
         PERCENT_FORMAT.setMaximumFractionDigits(4);
     }
@@ -198,10 +199,11 @@ public class SlotService {
 
         SlotStatsDto slotStatsDto = new SlotStatsDto()
                 .setRtp(formatAsPercentage(runningStat.mean()))
+                .setMaxStakeMultiplier(runningStat.getMaxStakeMultiplier())
                 .setHitRate(roundToPrecision(runningStat.hitRate(), 4))
                 .setWinRate(roundToPrecision(runningStat.winRate(), 4))
                 .setStake(stake)
-                .setTotalSpinsCount(spins)
+                .setTotalSpinsCount(df.format(spins))
                 .setMedian(roundToPrecision(runningStat.median(), 4))
                 .setStandardDeviation(roundToPrecision(runningStat.standardDeviation(), 4))
                 .setVariance(roundToPrecision(runningStat.variance(), 4))

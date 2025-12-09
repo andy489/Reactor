@@ -126,19 +126,18 @@ public class P04_AvalancheReactorProcessor implements SlotSpinProcessor {
                     int internalRecursion = recursionLevel + 1;
 
                     // Here we use symbols from randomly generated new reels from one reel set
-//                    // select re-spin reel set index
-//                    int reSpinReelSetIndex = slotContext.getRng()
-//                            .getWeightedIndex(reactionReelSetIndexes, reactionReelSetChances);
-//
-//                    List<Integer> reSpinReelStopPositions = slotContext.generateReelsStopPositions(reSpinReelSetIndex);
-//
-//                    SlotGameDto reactionReSpin = slotContext.createSlotSpin(currentStates, reSpinReelSetIndex, reSpinReelStopPositions, totalStake,
-//                            holdStickyData, internalRecursion);
+                    // select re-spin reel set index
+                    int reSpinReelSetIndex = slotContext.getRng()
+                            .getWeightedIndex(reactionReelSetIndexes, reactionReelSetChances);
+
+                    List<Integer> reSpinReelStopPositions = slotContext.generateReelsStopPositions(reSpinReelSetIndex);
+
+                    SlotGameDto reactionReSpin = slotContext.createSlotSpin(currentStates, reSpinReelSetIndex,
+                            reSpinReelStopPositions, totalStake, holdStickyData, internalRecursion);
                     // EO: Here we use symbols from randomly generated new reels from one reel set
 
-
-                    SlotGameDto reactionReSpin = slotContext.createSlotSpin(currentStates, reelsSetIndex, newReelsStopPositions, totalStake,
-                            holdStickyData, internalRecursion);
+//                    SlotGameDto reactionReSpin = slotContext.createSlotSpin(currentStates, reelsSetIndex,
+//                            newReelsStopPositions, totalStake, holdStickyData, internalRecursion);
 
                     payoutData.add(reactionReSpin);
                 }

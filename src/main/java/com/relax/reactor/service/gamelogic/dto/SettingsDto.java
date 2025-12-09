@@ -1,5 +1,6 @@
 package com.relax.reactor.service.gamelogic.dto;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.relax.reactor.service.gamelogic.core.data.ReelSet;
 import com.relax.reactor.service.gamelogic.enumerated.PayTableType;
 import com.relax.reactor.service.gamelogic.enumerated.Strategy;
@@ -17,6 +18,10 @@ import java.util.TreeMap;
 @Getter
 @Setter
 @Accessors(chain = true)
+@JsonPropertyOrder({"gameName", "slotId", "version", "sharpRtp", "stateNum", "hasChoice", "gridDim", "tileIds",
+        "tileNames", "linesNum", "lineDefinitions", "payTableType", "payTable", "strategy", "minStake",
+        "minMatch", "wildMultipliers", "wildMultipliersAggregations", "reelSets",
+})
 public class SettingsDto implements Serializable {
 
     @Serial
