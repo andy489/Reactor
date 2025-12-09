@@ -510,14 +510,19 @@ All metrics measure the multiplier by which the bet is multiplied. That is, the 
 ### 5. Spin with Predefined Sequence (Debug / Demo Mode)
 
 ```http
-GET /slot/spin/sequence?stake=2.00&sequence=0,2,1,3,1
+GET /slot/spin/sequence?sequence=0,1,2,3,4,5,6,7,8,1,11,12,13,14,15,16,17,18&stake=2.00
 ```
 
 Forces exact reel stops in order.
 Sequence format:
 
 - Comma-separated integers (0-based symbol index per reel)
-- Example: `1,0,2,3,1` → 5-reel stop at symbols [1,0,2,3,1]
+- Example: `0,1,2,3,4,5,6,7,8,1,11,12,13,14,15,16,17,18` → 
+  - 0 = choose reels set with index 0 (the only one available currently for base spin (since it is with 100% chance))
+  - 1,2,3,4,5,6,7,8 = reel stop positions for base spin
+  - 1 = choose reels set with index 1 (the only one available currently for reaction re-spin (since it is with 100% chance)) 
+  - 11,12,13,14,15,16,17,18 = reel stop positions for re-spin
+  - continue randomly with RNGs, since the predefined sequence is exhausted
 
 Useful for:
 

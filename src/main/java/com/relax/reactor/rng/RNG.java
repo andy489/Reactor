@@ -52,21 +52,22 @@ public class RNG {
         totalCallsMade++;
 
         if (usePredefinedSequence && predefinedSequenceRNG.hasMoreValues()) {
-            Object result = predefinedSequenceRNG.getNext();
+            Object result = predefinedSequenceRNG.getNext("getWeightedIndex");
 
             if (!(result instanceof Integer)) {
                 throw new IllegalStateException("Expected Integer result for getWeightedIndex, got: " +
                         result.getClass().getSimpleName() + " at position #" + predefinedSequenceRNG.getResultsConsumed());
             }
 
-            int index = (Integer) result;
+            int itemValue = (Integer) result;
 
-            if (index < 0 || index >= items.size()) {
-                throw new IllegalStateException("Result index " + index + " out of range [0, " +
-                        (items.size() - 1) + "] at position #" + predefinedSequenceRNG.getResultsConsumed());
+            int index = items.indexOf(itemValue);
+            if (index == -1) {
+                throw new IllegalStateException("Result value " + itemValue + " not found in items list: " +
+                        items + " at position #" + predefinedSequenceRNG.getResultsConsumed());
             }
 
-            return index;
+            return items.get(index);
         } else {
             randomCallsMade++;
             return getRandomWeightedIndex(items, chances);
@@ -87,7 +88,6 @@ public class RNG {
                     items.size(), chances.size()));
         }
 
-        // normalize chances if needed
         double total = chances.stream().mapToDouble(Double::doubleValue).sum();
 
         if (Math.abs(total - 1.0) > EPSILON) {
@@ -112,21 +112,23 @@ public class RNG {
         totalCallsMade++;
 
         if (usePredefinedSequence && predefinedSequenceRNG.hasMoreValues()) {
-            Object result = predefinedSequenceRNG.getNext();
+            Object result = predefinedSequenceRNG.getNext("getUniformIndex");
 
             if (!(result instanceof Integer)) {
                 throw new IllegalStateException("Expected Integer result for getUniformIndex, got: " +
                         result.getClass().getSimpleName() + " at position #" + predefinedSequenceRNG.getResultsConsumed());
             }
 
-            int index = (Integer) result;
+            int itemValue = (Integer) result;
 
-            if (index < 0 || index >= items.size()) {
-                throw new IllegalStateException("Result index " + index + " out of range [0, " +
-                        (items.size() - 1) + "] at position #" + predefinedSequenceRNG.getResultsConsumed());
+            // Find the index of this item in the list
+            int index = items.indexOf(itemValue);
+            if (index == -1) {
+                throw new IllegalStateException("Result value " + itemValue + " not found in items list: " +
+                        items + " at position #" + predefinedSequenceRNG.getResultsConsumed());
             }
 
-            return index;
+            return items.get(index);
         } else {
             randomCallsMade++;
             return getRandomUniformIndex(items);
@@ -145,21 +147,21 @@ public class RNG {
         totalCallsMade++;
 
         if (usePredefinedSequence && predefinedSequenceRNG.hasMoreValues()) {
-            Object result = predefinedSequenceRNG.getNext();
+            Object result = predefinedSequenceRNG.getNext("getUniformIndex_range");
 
             if (!(result instanceof Integer)) {
                 throw new IllegalStateException("Expected Integer result for getUniformIndex(range), got: " +
                         result.getClass().getSimpleName() + " at position #" + predefinedSequenceRNG.getResultsConsumed());
             }
 
-            int index = (Integer) result;
+            int itemValue = (Integer) result;
 
-            if (index < start || index > end) {
-                throw new IllegalStateException("Result index " + index + " out of range [" +
+            if (itemValue < start || itemValue > end) {
+                throw new IllegalStateException("Result value " + itemValue + " out of range [" +
                         start + ", " + end + "] at position #" + predefinedSequenceRNG.getResultsConsumed());
             }
 
-            return index;
+            return itemValue;
         } else {
             randomCallsMade++;
             return getRandomUniformIndex(start, end);
@@ -182,7 +184,7 @@ public class RNG {
         totalCallsMade++;
 
         if (usePredefinedSequence && predefinedSequenceRNG.hasMoreValues()) {
-            Object result = predefinedSequenceRNG.getNext();
+            Object result = predefinedSequenceRNG.getNext("nextDouble");
 
             if (!(result instanceof Double || result instanceof Integer)) {
                 throw new IllegalStateException("Expected Double result for nextDouble, got: " +
@@ -221,5 +223,9 @@ public class RNG {
 
     public int getSequenceCallsMade() {
         return totalCallsMade - randomCallsMade;
+    }
+
+    public String getExpectedNextValueType() {
+        return predefinedSequenceRNG.getExpectedMethod();
     }
 }
