@@ -2,6 +2,9 @@
 ## Overview
 ### API Endpoints
 
+Interactive API Documentation is Live
+Swagger UI: `/swagger-ui/index.html`
+
 Base URL: `/slot`
 
 All endpoints return JSON and use HTTP GET for simplicity (demo/simulation purposes).
