@@ -5,7 +5,7 @@
   "stashedCumulativeWinAmountBeforeGambleChoice" : 9.0,
   "accumulatedWinAmount" : 4.0,
   "winAmount" : 4.0,
-  "gambleMultiplier" : -1,
+  "gambleMultiplier" : 1,
   "spinNum" : 1,
   "totalSpins" : 3,
   "reelsSetIndex" : 0,

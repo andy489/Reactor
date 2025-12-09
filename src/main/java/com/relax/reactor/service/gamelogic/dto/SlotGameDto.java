@@ -76,7 +76,7 @@ public class SlotGameDto extends BaseDto implements Serializable {
         List<SlotGameDto> result = new ArrayList<>();
 
         dfs(this, result);
-
+        result.forEach(s -> s.getPayoutData().removeIf(p -> p instanceof SlotGameDto));
         return result;
     }
 
