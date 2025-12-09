@@ -67,7 +67,7 @@ public class SlotGameDto extends BaseDto implements Serializable {
     @JsonProperty("_links")
     private Map<String, String> links;
 
-    private Integer userChoice; // User's gamble choice: 1 for COLLECT, 2 for GAMBLE
+    private Integer userChoice; // user's gamble choice: 1 for COLLECT, 2 for GAMBLE
 
     public SlotGameDto() {
     }

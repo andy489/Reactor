@@ -125,14 +125,13 @@ public class SlotGameStickyData implements Serializable {
 
         int size = primaryList.size();
 
-        // Validate all non-null lists have the same size
         for (List<T> list : lists) {
             if (list != null && list.size() != size) {
                 throw new IllegalArgumentException("All lists must have the same size");
             }
         }
 
-        // Selection sort
+        // selection sort for a small number of stickies
         for (int i = 0; i < size - 1; i++) {
             int minIndex = i;
             for (int j = i + 1; j < size; j++) {

@@ -43,7 +43,7 @@ public class SlotContextFactory {
         try (InputStream inputStream = resource.getInputStream()) {
             SlotContext slotContext = mapper.readValue(inputStream, SlotContext.class);
 
-            // Additional initializations
+            // additional initializations
             slotContext.setAfterDecimalPrecision(2);
 
             return slotContext;

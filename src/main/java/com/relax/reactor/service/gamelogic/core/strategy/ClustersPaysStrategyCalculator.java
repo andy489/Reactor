@@ -1,6 +1,5 @@
 package com.relax.reactor.service.gamelogic.core.strategy;
 
-import ch.qos.logback.core.util.AggregationType;
 import com.relax.reactor.service.gamelogic.core.data.GridPosition;
 import com.relax.reactor.service.gamelogic.core.data.Pair;
 import com.relax.reactor.service.gamelogic.dto.payout.SlotContactDto;
@@ -105,10 +104,10 @@ public class ClustersPaysStrategyCalculator {
 
                         currWildMultipliersAggregation = WildMultipliersAggregationType.NONE;
 
-                        if (cellsAndWildMultipliers.getKey() >= minMatch) {
+                        if (cellsAndWildMultipliers.getX() >= minMatch) {
 
                             // arrange attributes
-                            Integer contactSize = cellsAndWildMultipliers.getKey();
+                            Integer contactSize = cellsAndWildMultipliers.getX();
                             MatchType matchType = strategy.getMatchType();
 
                             for (int i = 0; i < REELS_CNT; i++) {
@@ -118,8 +117,8 @@ public class ClustersPaysStrategyCalculator {
                             GridPosition contactStart = extractMatchStart(contact2DimPos);
 
                             double wildMultipliersAggregated = 1.0d;
-                            if (cellsAndWildMultipliers.getValue() > 0.0d) {
-                                wildMultipliersAggregated = cellsAndWildMultipliers.getValue();
+                            if (cellsAndWildMultipliers.getY() > 0.0d) {
+                                wildMultipliersAggregated = cellsAndWildMultipliers.getY();
                             }
 
                             double singularPay = payouts.get(currNormalSym).floorEntry(contactSize).getValue();
@@ -173,7 +172,7 @@ public class ClustersPaysStrategyCalculator {
     private void dfs(Integer reel, Integer row, List<List<Integer>> screen, Integer trackedSymbol,
                      Pair<Integer, Double> cellsAndWildMultipliers, List<List<Integer>> contact2DimPos) {
 
-        cellsAndWildMultipliers.setKey(cellsAndWildMultipliers.getKey() + 1);
+        cellsAndWildMultipliers.setX(cellsAndWildMultipliers.getX() + 1);
         Integer currSym = screen.get(reel).get(row);
 
         // calculate wilds multipliers
@@ -193,10 +192,10 @@ public class ClustersPaysStrategyCalculator {
                     case ADDITIVE: {
                         if (currWildMultipliersAggregation == WildMultipliersAggregationType.NONE) {
                             currWildMultipliersAggregation = WildMultipliersAggregationType.ADDITIVE;
-                            cellsAndWildMultipliers.setValue(multiplierValue);
+                            cellsAndWildMultipliers.setY(multiplierValue);
                             break;
                         } else if (currWildMultipliersAggregation == WildMultipliersAggregationType.ADDITIVE) {
-                            cellsAndWildMultipliers.setValue(cellsAndWildMultipliers.getValue() + multiplierValue);
+                            cellsAndWildMultipliers.setY(cellsAndWildMultipliers.getY() + multiplierValue);
                             break;
                         }
 
@@ -206,10 +205,10 @@ public class ClustersPaysStrategyCalculator {
                     case MULTIPLICATIVE: {
                         if (currWildMultipliersAggregation == WildMultipliersAggregationType.NONE) {
                             currWildMultipliersAggregation = WildMultipliersAggregationType.MULTIPLICATIVE;
-                            cellsAndWildMultipliers.setValue(multiplierValue);
+                            cellsAndWildMultipliers.setY(multiplierValue);
                             break;
                         } else if (currWildMultipliersAggregation == WildMultipliersAggregationType.MULTIPLICATIVE) {
-                            cellsAndWildMultipliers.setValue(cellsAndWildMultipliers.getValue() * multiplierValue);
+                            cellsAndWildMultipliers.setY(cellsAndWildMultipliers.getY() * multiplierValue);
                             break;
                         }
                         throw new IllegalStateException("Only wilds with same multiplier aggregation function" +

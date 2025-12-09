@@ -1,10 +1,19 @@
 package com.relax.reactor.service.gamelogic.core.data;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 
+@Getter
+@Setter
+@Accessors(chain = true)
 public class Pair<K, V> implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     private K x;
@@ -44,23 +53,5 @@ public class Pair<K, V> implements Serializable {
             return Objects.equals(y, pair.y);
         }
         return false;
-    }
-
-    public K getKey() {
-        return x;
-    }
-
-    public Pair<K, V> setKey(K x) {
-        this.x = x;
-        return this;
-    }
-
-    public V getValue() {
-        return y;
-    }
-
-    public Pair<K, V> setValue(V y) {
-        this.y = y;
-        return this;
     }
 }

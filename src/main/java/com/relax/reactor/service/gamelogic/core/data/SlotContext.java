@@ -152,6 +152,4 @@ public class SlotContext extends SpinHandlers implements Serializable {
 
         return result;
     }
-
-
 }

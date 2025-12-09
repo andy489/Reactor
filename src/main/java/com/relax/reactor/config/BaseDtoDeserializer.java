@@ -27,12 +27,11 @@ public class BaseDtoDeserializer extends StdDeserializer<BaseDto> {
     }
 
     @Override
-    public BaseDto deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
+    public BaseDto deserialize(JsonParser jp, DeserializationContext context) throws IOException {
         JsonNode node = jp.getCodec().readTree(jp);
 
         log.debug("Deserializing BaseDto node with fields: {}", node.fieldNames());
 
-        // Use the ObjectMapper from the current context
         ObjectMapper mapper = (ObjectMapper) jp.getCodec();
 
         // Check for fields that indicate specific types
@@ -44,7 +43,6 @@ public class BaseDtoDeserializer extends StdDeserializer<BaseDto> {
             return mapper.treeToValue(node, SlotGameDto.class);
         }
 
-        // Default fallback
         log.warn("Could not determine concrete type for BaseDto, using default");
         BaseDto baseDto = new BaseDto();
 

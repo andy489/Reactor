@@ -2,6 +2,7 @@ package com.relax.reactor.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.relax.reactor.config.SlotContextFactory;
+import com.relax.reactor.dto.PredefinedSequenceResponse;
 import com.relax.reactor.exception.GambleNotAvailableException;
 import com.relax.reactor.exception.PendingGambleException;
 import com.relax.reactor.rng.RNG;
@@ -24,11 +25,16 @@ import static com.relax.reactor.service.gamelogic.core.util.HelperGameLogicMetho
 @Service
 public class SlotService {
 
+    private static final NumberFormat PERCENT_FORMAT = NumberFormat.getPercentInstance();
+
+    {
+        PERCENT_FORMAT.setMaximumFractionDigits(4);
+    }
+
     private final ObjectMapper mapper;
     private final SlotContext slotContext;
     private final SpinResultLogger logger;
     private final RNG rng;
-    private final SlotContextFactory slotContextFactory;
 
     public SlotService(ObjectMapper mapper,
                        SlotContext slotContext,
@@ -38,7 +44,6 @@ public class SlotService {
         this.slotContext = slotContext;
         this.logger = logger;
         this.rng = rng;
-        this.slotContextFactory = slotContextFactory;
     }
 
     public Optional<SettingsDto> settings() {
@@ -127,7 +132,7 @@ public class SlotService {
         if (postSpinProcessors != null && !postSpinProcessors.isEmpty()) {
             for (SlotSpinProcessor processor : postSpinProcessors) {
                 processor.processSpin(
-                        spin, // Pass the original non-linearized spin
+                        spin, // pass the original non-linearized spin
                         slotGame,
                         states != null ? states : spin.getPostSpinStates(),
                         spin.getReelsSetIndex() != null ? spin.getReelsSetIndex() : 0,
@@ -193,16 +198,56 @@ public class SlotService {
 
         SlotStatsDto slotStatsDto = new SlotStatsDto()
                 .setRtp(formatAsPercentage(runningStat.mean()))
-                .setHitRate(roundToPrecision(runningStat.hitRate(),4))
-                .setWinRate(roundToPrecision(runningStat.winRate(),4))
+                .setHitRate(roundToPrecision(runningStat.hitRate(), 4))
+                .setWinRate(roundToPrecision(runningStat.winRate(), 4))
                 .setStake(stake)
                 .setTotalSpinsCount(spins)
-                .setMedian(roundToPrecision(runningStat.median(),4))
-                .setStandardDeviation(roundToPrecision(runningStat.standardDeviation(),4))
-                .setVariance(roundToPrecision(runningStat.variance(),4))
+                .setMedian(roundToPrecision(runningStat.median(), 4))
+                .setStandardDeviation(roundToPrecision(runningStat.standardDeviation(), 4))
+                .setVariance(roundToPrecision(runningStat.variance(), 4))
                 .setTimeElapsed(formatDuration(totalTime));
 
         return Optional.of(slotStatsDto);
+    }
+
+    public PredefinedSequenceResponse spinWithPredefinedSequence(double stake, List<Object> sequence, List<Integer> states) {
+        rng.enablePredefinedSequence(sequence);
+
+        try {
+            int sequenceLength = sequence.size();
+
+            Optional<List<SlotGameDto>> spinResult = spin(stake, states);
+
+            int sequenceCallsMade = rng.getSequenceResultsConsumed();
+            int totalCallsMade = rng.getTotalCallsMade();
+            int randomCallsMade = rng.getRandomCallsMade();
+
+            int resultsRemaining = Math.max(0, sequenceLength - sequenceCallsMade);
+
+            boolean sequenceExhausted = !rng.hasMoreSequenceValues();
+
+            boolean sequenceCompleted = sequenceCallsMade == sequenceLength && randomCallsMade == 0;
+
+            PredefinedSequenceResponse response = new PredefinedSequenceResponse()
+                    .setTotalRNGCallsMade(totalCallsMade)
+                    .setPredefinedRNGConsumed(sequenceCallsMade)
+                    .setPredefinedRNGRemaining(resultsRemaining)
+                    .setSequenceCompleted(sequenceCompleted)
+                    .setSequenceExhausted(sequenceExhausted)
+                    .setRandomRNGUsed(randomCallsMade);
+
+            spinResult.ifPresent(response::setSpinResults);
+
+            return response;
+
+        } catch (Exception e) {
+            PredefinedSequenceResponse response = new PredefinedSequenceResponse();
+            response.setError("Error at sequence position #" + rng.getSequenceResultsConsumed() + ": " + e.getMessage());
+            return response;
+
+        } finally {
+            rng.disablePredefinedSequence();
+        }
     }
 
     public static String formatDuration(long totalTimeMillis) {
@@ -222,11 +267,6 @@ public class SlotService {
         } else {
             return String.format("%d ms", millis);
         }
-    }
-
-    private static final NumberFormat PERCENT_FORMAT = NumberFormat.getPercentInstance();
-    static {
-        PERCENT_FORMAT.setMaximumFractionDigits(4);
     }
 
     private String formatAsPercentage(double value) {

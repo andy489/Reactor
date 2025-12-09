@@ -47,12 +47,20 @@ public class SpinResultLogger {
         }
     }
 
-    // Save original non-linearized spin
     public void logOriginalSpin(SlotGameDto originalSpin) {
         try {
             String json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(originalSpin);
 
             String filePath = LAST_SPIN_DIR + ORIGINAL_SPIN_FILE;
+
+            File directory = new File(LAST_SPIN_DIR);
+            if (!directory.exists()) {
+                boolean created = directory.mkdirs();
+                if (created) {
+                    LOGGER.info("Created directory: {}", directory.getAbsolutePath());
+                }
+            }
+
             try (PrintWriter writer = new PrintWriter(new FileWriter(filePath))) {
                 writer.print(json);
             }
@@ -65,7 +73,6 @@ public class SpinResultLogger {
         }
     }
 
-    // Load original non-linearized spin
     public SlotGameDto loadOriginalSpin() {
         try {
             String filePath = LAST_SPIN_DIR + ORIGINAL_SPIN_FILE;

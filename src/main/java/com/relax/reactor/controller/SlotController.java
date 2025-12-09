@@ -1,5 +1,7 @@
 package com.relax.reactor.controller;
 
+import com.relax.reactor.dto.PredefinedSequenceResponse;
+import com.relax.reactor.service.ParameterParsingService;
 import com.relax.reactor.service.SlotService;
 import com.relax.reactor.service.gamelogic.dto.SettingsDto;
 import com.relax.reactor.service.gamelogic.dto.SlotGameDto;
@@ -12,6 +14,7 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,7 +30,14 @@ import java.util.List;
 @AllArgsConstructor
 public class SlotController {
 
-    private SlotService slotService;
+    private final SlotService slotService;
+    private final ParameterParsingService parameterParsingService;
+
+    @Autowired
+    public SlotController(ParameterParsingService parameterParsingService, SlotService slotService) {
+        this.parameterParsingService = parameterParsingService;
+        this.slotService = slotService;
+    }
 
     @GetMapping("/settings")
     public ResponseEntity<SettingsDto> settings() {
@@ -67,5 +77,42 @@ public class SlotController {
                                               Double stake) {
 
         return ResponseEntity.of(slotService.runSimulation(spins, stake));
+    }
+
+    @GetMapping("/spin/sequence")
+    public ResponseEntity<PredefinedSequenceResponse> spinWithSequence(
+            @NotNull(message = "Stake is required")
+            @Positive(message = "Stake must be positive")
+            @MultipleOfMinStake(minStake = 0.10, message = "Stake must be in multiples of $0.10")
+            @MaxBetAmount(maxAmount = 100.00)
+            @RequestParam Double stake,
+
+            @NotNull(message = "Sequence is required")
+            @RequestParam String sequence,
+
+            @RequestParam(value = "states", required = false)
+            String states) {
+
+        try {
+            List<Object> parsedSequence = parameterParsingService.parseSequence(sequence);
+            List<Integer> parsedStates = parameterParsingService.parseStates(states);
+
+            PredefinedSequenceResponse response = slotService.spinWithPredefinedSequence(
+                    stake,
+                    parsedSequence,
+                    parsedStates
+            );
+
+            if (response.getError() != null) {
+                return ResponseEntity.badRequest().body(response);
+            }
+
+            return ResponseEntity.ok(response);
+
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(
+                    PredefinedSequenceResponse.error("Invalid parameter: " + e.getMessage())
+            );
+        }
     }
 }

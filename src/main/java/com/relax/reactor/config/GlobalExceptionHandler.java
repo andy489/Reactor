@@ -9,11 +9,9 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
@@ -81,7 +79,6 @@ public class GlobalExceptionHandler {
             errorResponse.put("stashedCumulativeWinAmount", ex.getStashedCumulativeWinAmount());
         }
 
-        // Add HATEOAS links for the pending gamble
         Map<String, String> links = new HashMap<>();
         links.put("COLLECT", "/slot/gamble?choice=1");
         links.put("GAMBLE", "/slot/gamble?choice=2");

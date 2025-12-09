@@ -1,6 +1,5 @@
 package com.relax.reactor.service.gamelogic.core;
 
-
 import com.relax.reactor.service.gamelogic.core.data.SlotContext;
 import com.relax.reactor.service.gamelogic.core.data.SlotGameStickyData;
 import com.relax.reactor.service.gamelogic.dto.SlotGameDto;
