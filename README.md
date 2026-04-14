@@ -3,6 +3,41 @@
 
 <a href="./assets/Relax_Gamimng_Avalanche.pdf" target="_blank">Relax Gaming Avalanche Mechanics</a>
 
+## Prerequisites
+
+- **Java 17** (required by the project configuration)
+- **Gradle** (the project uses Gradle Wrapper, so you don't need to install it separately)
+
+## Project Dependencies
+
+This project includes:
+- Spring Boot Web MVC
+- Spring Boot Validation
+- Spring Boot HATEOAS
+- SpringDoc OpenAPI (Swagger UI) for API documentation
+- Apache Commons RNG for random number generation
+- Lombok for reducing boilerplate code
+- Jackson for JSON processing
+
+## How to Run
+
+### Option 1: Run directly with Gradle (Development)
+
+```bash
+# On Linux/Mac
+./gradlew bootRun
+
+# On Windows
+gradlew bootRun
+
+### Option 2: Build and run as JAR (Production)
+bash
+# Build the executable JAR
+./gradlew build
+
+# Run the JAR file
+java -jar build/libs/reactor-0.0.1-SNAPSHOT.jar
+
 ### API Endpoints
 
 Interactive API Documentation is Live
