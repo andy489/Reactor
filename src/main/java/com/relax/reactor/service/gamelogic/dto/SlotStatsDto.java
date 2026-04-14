@@ -1,6 +1,7 @@
 package com.relax.reactor.service.gamelogic.dto;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.relax.reactor.service.gamelogic.enumerated.AvalancheMode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -13,7 +14,7 @@ import java.io.Serializable;
 @Accessors(chain = true)
 @JsonPropertyOrder({
         "rtp", "maxStakeMultiplier", "hitRate", "winRate", "stake", "median", "variance", "standardDeviation",
-        "winRate", "hitRate", "randomVariable", "timeElapsed", "totalSpinsCount"
+        "winRate", "hitRate", "avalancheMode", "randomVariable", "timeElapsed", "totalSpinsCount"
 })
 public class SlotStatsDto implements Serializable {
 
@@ -37,4 +38,6 @@ public class SlotStatsDto implements Serializable {
     private String randomVariable = "STAKE_MULTIPLIER";
     private String timeElapsed;
     private String totalSpinsCount;
+
+    private AvalancheMode avalancheMode;
 }

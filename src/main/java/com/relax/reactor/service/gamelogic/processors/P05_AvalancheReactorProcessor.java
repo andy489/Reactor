@@ -8,20 +8,22 @@ import com.relax.reactor.service.gamelogic.dto.SlotGameDto;
 import com.relax.reactor.service.gamelogic.dto.payout.BaseDto;
 import com.relax.reactor.service.gamelogic.dto.payout.SlotContactDto;
 import com.relax.reactor.service.gamelogic.dto.payout.SlotExplodeFallDto;
+import com.relax.reactor.service.gamelogic.enumerated.AvalancheMode;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.apache.commons.lang3.NotImplementedException;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+
 
 @Setter
 @Accessors(chain = true)
-public class P04_AvalancheReactorProcessor implements SlotSpinProcessor {
+public class P05_AvalancheReactorProcessor implements SlotSpinProcessor {
 
-    private List<Integer> reactionReelSetIndexes;
-    private List<Double> reactionReelSetChances;
+    private TreeMap<Integer, List<Integer>> reelSetIndexes;
+    private TreeMap<Integer, List<Double>> reelSetChances;
+
+    private AvalancheMode avalancheMode;
 
     @Override
     public void processSpin(SlotGameDto spinData, SlotContext slotContext, List<Integer> currentStates,
@@ -106,38 +108,53 @@ public class P04_AvalancheReactorProcessor implements SlotSpinProcessor {
 
                     spinData.getPayoutData().add(explodeFallDto);
 
-                    // Here we use the actual symbols from the current reels after the explosion.
-                    List<Integer> newReelsStopPositions = new ArrayList<>(spinData.getReelStopPositions());
-
-                    for (int j = 0; j < explodeFallDto.getExplodeReels().size(); j++) {
-                        if (newReelsStopPositions.get(explodeFallDto.getExplodeReels().get(j)) - 1 < 0) {
-                            newReelsStopPositions.set(explodeFallDto.getExplodeReels().get(j),
-                                    slotContext.getReelSets().get(reelsSetIndex).getReelSet()
-                                            .get(explodeFallDto.getExplodeReels().get(j)).size() - 1);
-                        } else {
-                            newReelsStopPositions.set(explodeFallDto.getExplodeReels().get(j),
-                                    newReelsStopPositions.get(explodeFallDto.getExplodeReels().get(j)) - 1);
-                        }
-                    }
-                    // EO: Here we use the actual symbols from the current reels after the explosion.
-
-
                     // construct re-spin
                     int internalRecursion = recursionLevel + 1;
 
-                    // Here we use symbols from randomly generated new reels from one reel set
-                    // select re-spin reel set index
-                    int reSpinReelSetIndex = slotContext.getRng()
-                            .getWeightedIndex(reactionReelSetIndexes, reactionReelSetChances);
+                    SlotGameDto reactionReSpin = null;
 
-                    List<Integer> reSpinReelStopPositions = slotContext.generateReelsStopPositions(reSpinReelSetIndex);
+                    switch (avalancheMode) {
+                        case REGENERATE -> {
+                            reactionReSpin = slotContext.createSlotSpin(currentStates, reelsSetIndex,
+                                    reelStopPositions, totalStake, holdStickyData, internalRecursion);
+                        }
+                        case REROLL -> {
+                            // select re-spin reel set index
 
-                    SlotGameDto reactionReSpin = slotContext.createSlotSpin(currentStates, reSpinReelSetIndex,
-                            reSpinReelStopPositions, totalStake, holdStickyData, internalRecursion);
-                    // EO: Here we use symbols from randomly generated new reels from one reel set
+                            List<Integer> reelsIndexes = reelSetIndexes.floorEntry(internalRecursion).getValue();
+                            List<Double> reelsIndexesChances = reelSetChances.floorEntry(internalRecursion).getValue();
 
-//                    SlotGameDto reactionReSpin = slotContext.createSlotSpin(currentStates, reelsSetIndex,
-//                            newReelsStopPositions, totalStake, holdStickyData, internalRecursion);
+                            int reSpinReelSetIndex = slotContext.getRng()
+                                    .getWeightedIndex(reelsIndexes, reelsIndexesChances);
+                            Integer actualReelSetIndex = reelsIndexes.get(reSpinReelSetIndex);
+
+                            List<Integer> reSpinReelStopPositions =
+                                    slotContext.generateReelsStopPositions(
+                                            reelSetIndexes.floorEntry(recursionLevel).getValue()
+                                                    .get(reSpinReelSetIndex));
+
+                            reactionReSpin = slotContext.createSlotSpin(currentStates, actualReelSetIndex,
+                                    reSpinReelStopPositions, totalStake, holdStickyData, internalRecursion);
+                        }
+
+                        case CASCADE -> {
+                            List<Integer> newReelsStopPositions = new ArrayList<>(spinData.getReelStopPositions());
+
+                            for (int j = 0; j < explodeFallDto.getExplodeReels().size(); j++) {
+                                if (newReelsStopPositions.get(explodeFallDto.getExplodeReels().get(j)) - 1 < 0) {
+                                    newReelsStopPositions.set(explodeFallDto.getExplodeReels().get(j),
+                                            slotContext.getReelSets().get(reelsSetIndex).getReelSet()
+                                                    .get(explodeFallDto.getExplodeReels().get(j)).size() - 1);
+                                } else {
+                                    newReelsStopPositions.set(explodeFallDto.getExplodeReels().get(j),
+                                            newReelsStopPositions.get(explodeFallDto.getExplodeReels().get(j)) - 1);
+                                }
+                            }
+
+                            reactionReSpin = slotContext.createSlotSpin(currentStates, reelsSetIndex,
+                                    newReelsStopPositions, totalStake, holdStickyData, internalRecursion);
+                        }
+                    }
 
                     payoutData.add(reactionReSpin);
                 }

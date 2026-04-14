@@ -55,7 +55,8 @@ public class SlotService {
     public Optional<List<SlotGameDto>> spin(double stake, List<Integer> states) {
         SlotGameDto lastSpin = logger.loadOriginalSpin();
 
-        if (lastSpin != null) {
+        if (lastSpin != null && lastSpin.getStashedCumulativeWinAmountBeforeGambleChoice() != null &&
+                lastSpin.getStashedCumulativeWinAmountBeforeGambleChoice() > 0) {
             Integer gambleMultiplier = lastSpin.getGambleMultiplier();
             boolean hasPendingGamble = (gambleMultiplier != null && gambleMultiplier == -1);
 
@@ -63,8 +64,9 @@ public class SlotService {
                 Double toGamble = lastSpin.getStashedCumulativeWinAmountBeforeGambleChoice();
                 String message = String.format(
                         "Pending gamble decision required. Choose to COLLECT (win $%.2f) or GAMBLE for $%.2f x 2",
-                        toGamble != null ? toGamble : 0.0, toGamble != null ? toGamble : 0.0
+                        toGamble, toGamble
                 );
+
                 throw new PendingGambleException(message, toGamble);
             }
         }
@@ -207,7 +209,8 @@ public class SlotService {
                 .setMedian(roundToPrecision(runningStat.median(), 4))
                 .setStandardDeviation(roundToPrecision(runningStat.standardDeviation(), 4))
                 .setVariance(roundToPrecision(runningStat.variance(), 4))
-                .setTimeElapsed(formatDuration(totalTime));
+                .setTimeElapsed(formatDuration(totalTime))
+                .setAvalancheMode(slotContext.getAvalancheMode());
 
         return Optional.of(slotStatsDto);
     }

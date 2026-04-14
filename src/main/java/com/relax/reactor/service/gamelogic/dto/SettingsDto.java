@@ -2,6 +2,7 @@ package com.relax.reactor.service.gamelogic.dto;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.relax.reactor.service.gamelogic.core.data.ReelSet;
+import com.relax.reactor.service.gamelogic.enumerated.AvalancheMode;
 import com.relax.reactor.service.gamelogic.enumerated.PayTableType;
 import com.relax.reactor.service.gamelogic.enumerated.Strategy;
 import com.relax.reactor.service.gamelogic.enumerated.WildMultipliersAggregationType;
@@ -19,7 +20,7 @@ import java.util.TreeMap;
 @Setter
 @Accessors(chain = true)
 @JsonPropertyOrder({"gameName", "slotId", "version", "sharpRtp", "stateNum", "hasChoice", "gridDim", "tileIds",
-        "tileNames", "linesNum", "lineDefinitions", "payTableType", "payTable", "strategy", "minStake",
+        "tileNames", "linesNum", "lineDefinitions", "payTableType", "payTable", "strategy", "avalancheMode", "minStake",
         "minMatch", "wildMultipliers", "wildMultipliersAggregations", "reelSets",
 })
 public class SettingsDto implements Serializable {
@@ -30,7 +31,7 @@ public class SettingsDto implements Serializable {
     protected String gameName;
     protected Integer slotId;
     protected Integer version;
-    protected Double sharpRtp;
+    protected Map<String, Double> sharpRtp;
     protected Integer stateNum;
     protected Boolean hasChoice;
     protected List<Integer> gridDim;
@@ -42,6 +43,7 @@ public class SettingsDto implements Serializable {
     protected PayTableType payTableType;
     protected Map<Integer, TreeMap<Integer, Double>> payTable;
     protected Strategy strategy;
+    protected AvalancheMode avalancheMode;
     protected Double minStake;
     protected Integer minMatch;
     protected Map<Integer, Double> wildMultipliers;

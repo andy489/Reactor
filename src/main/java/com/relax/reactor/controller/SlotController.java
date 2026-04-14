@@ -6,6 +6,7 @@ import com.relax.reactor.service.SlotService;
 import com.relax.reactor.service.gamelogic.dto.SettingsDto;
 import com.relax.reactor.service.gamelogic.dto.SlotGameDto;
 import com.relax.reactor.service.gamelogic.dto.SlotStatsDto;
+import com.relax.reactor.service.gamelogic.enumerated.AvalancheMode;
 import com.relax.reactor.validation.MaxBetAmount;
 import com.relax.reactor.validation.MultipleOfMinStake;
 import com.relax.reactor.validation.ValidGambleChoice;

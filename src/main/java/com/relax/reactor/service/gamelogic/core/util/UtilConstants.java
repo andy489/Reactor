@@ -7,4 +7,6 @@ public class UtilConstants {
     public static final int SCREEN_ROWS_IND = 1;
 
     public static final Integer VISITED_GRID_CELL = -1;
+
+    public static final Integer INVALID_TILE_ID = -1;
 }

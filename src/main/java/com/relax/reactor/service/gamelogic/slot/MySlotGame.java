@@ -2,13 +2,8 @@ package com.relax.reactor.service.gamelogic.slot;
 
 import com.relax.reactor.rng.RNG;
 import com.relax.reactor.service.gamelogic.core.data.SlotContext;
-import com.relax.reactor.service.gamelogic.processors.P01_PopulateScreenProcessor;
-import com.relax.reactor.service.gamelogic.processors.P02_StickyApplierProcessor;
-import com.relax.reactor.service.gamelogic.processors.P03_ClusterPayoutStrategyProcessor;
-import com.relax.reactor.service.gamelogic.processors.P04_AvalancheReactorProcessor;
-import com.relax.reactor.service.gamelogic.processors.P05_SlotSumPayoutsProcessor;
-import com.relax.reactor.service.gamelogic.processors.P06_PropertiesAdjustmentsProcessor;
-import com.relax.reactor.service.gamelogic.processors.P07_GambleChoicePostSpinProcessor;
+import com.relax.reactor.service.gamelogic.enumerated.AvalancheMode;
+import com.relax.reactor.service.gamelogic.processors.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -37,13 +32,31 @@ public class MySlotGame extends SlotContext {
     }
 
     public void initializeAndArrangeProcessors() {
+
+        List<Integer> initialScreenTileIds = tileIds.entrySet().stream()
+                .flatMap(entry -> entry.getValue().stream())
+                .toList();
+
+        List<Integer> reactionScreenTileIds = tileIds.entrySet().stream()
+                .filter(entry -> !entry.getKey().equals("blocker"))
+                .flatMap(entry -> entry.getValue().stream())
+                .toList();
+
         // Create spin processors
-        P01_PopulateScreenProcessor p01_PopulateScreenProcessor = new P01_PopulateScreenProcessor();
+        P01_StickyApplierProcessor p01_StickyApplierProcessor = new P01_StickyApplierProcessor()
+                .setAvalancheMode(avalancheMode);
 
-        P02_StickyApplierProcessor p02_StickyApplierProcessor = new P02_StickyApplierProcessor();
+        P02_PopulateScreenProcessor p02_PopulateScreenProcessor = new P02_PopulateScreenProcessor()
+                .setInitialScreenTileIds(initialScreenTileIds)
+                .setReactionScreenTileIds(reactionScreenTileIds)
+                .setTileWeights(tileWeights)
+                .setAvalancheMode(avalancheMode);
 
-        P03_ClusterPayoutStrategyProcessor p03_ClusterPayoutStrategyProcessor =
-                new P03_ClusterPayoutStrategyProcessor()
+        P03_StickyApplierProcessor p03_StickyApplierProcessor = new P03_StickyApplierProcessor()
+                .setAvalancheMode(avalancheMode);
+
+        P04_ClusterPayoutStrategyProcessor p04_ClusterPayoutStrategyProcessor =
+                new P04_ClusterPayoutStrategyProcessor()
                         .setPayouts(payTable)
                         .setStrategy(strategy)
                         .setMinMatch(minMatch)
@@ -52,31 +65,33 @@ public class MySlotGame extends SlotContext {
                         .setExcludeMatchSymbols(new ArrayList<>())
                         .setNeighbors(neighbors);
 
-        P04_AvalancheReactorProcessor p04_AvalancheReactorProcessor = new P04_AvalancheReactorProcessor()
-                .setReactionReelSetIndexes(reactionGameReelSetIndexes)
-                .setReactionReelSetChances(reactionGameReelSetChances);
+        P05_AvalancheReactorProcessor p05_AvalancheReactorProcessor = new P05_AvalancheReactorProcessor()
+                .setReelSetIndexes(reelSetIndexes)
+                .setReelSetChances(reelSetChances)
+                .setAvalancheMode(avalancheMode);
 
-        P05_SlotSumPayoutsProcessor p05_SlotSumPayoutsProcessor = new P05_SlotSumPayoutsProcessor();
+        P06_SlotSumPayoutsProcessor p06_SlotSumPayoutsProcessor = new P06_SlotSumPayoutsProcessor();
 
-        P06_PropertiesAdjustmentsProcessor p06_PropertiesAdjustmentsProcessor =
-                new P06_PropertiesAdjustmentsProcessor();
+        P07_PropertiesAdjustmentsProcessor p07_PropertiesAdjustmentsProcessor =
+                new P07_PropertiesAdjustmentsProcessor();
         // EO: Create spin processors
 
         // Arrange spin processors
-        spinProcessors.add(p01_PopulateScreenProcessor);
-        spinProcessors.add(p02_StickyApplierProcessor);
-        spinProcessors.add(p03_ClusterPayoutStrategyProcessor);
-        spinProcessors.add(p04_AvalancheReactorProcessor);
-        spinProcessors.add(p05_SlotSumPayoutsProcessor);
-        spinProcessors.add(p06_PropertiesAdjustmentsProcessor);
+        spinProcessors.add(p01_StickyApplierProcessor);
+        spinProcessors.add(p02_PopulateScreenProcessor);
+        spinProcessors.add(p03_StickyApplierProcessor);
+        spinProcessors.add(p04_ClusterPayoutStrategyProcessor);
+        spinProcessors.add(p05_AvalancheReactorProcessor);
+        spinProcessors.add(p06_SlotSumPayoutsProcessor);
+        spinProcessors.add(p07_PropertiesAdjustmentsProcessor);
         // EO: Arrange spin processors
 
         // Create post-spin processors (gambles and other choices)
-        P07_GambleChoicePostSpinProcessor p07_GambleChoicePostSpinProcessor = new P07_GambleChoicePostSpinProcessor();
+        P08_GambleChoicePostSpinProcessor p08_GambleChoicePostSpinProcessor = new P08_GambleChoicePostSpinProcessor();
         // EO: Create post-spin processors
 
         // Arrange post-spin Processors
-        postSpinProcessors.add(p07_GambleChoicePostSpinProcessor);
+        postSpinProcessors.add(p08_GambleChoicePostSpinProcessor);
         // EO: Arrange post-spin Processors
     }
 
@@ -110,6 +125,7 @@ public class MySlotGame extends SlotContext {
         target.setMinMatch(source.getMinMatch());
         target.setAfterDecimalPrecision(source.getAfterDecimalPrecision());
         target.setBonusNum(source.getBonusNum());
+        target.setAvalancheMode(source.getAvalancheMode());
 
         // Copy collections with new instances to avoid shared references
         if (source.getGridDim() != null) {
@@ -136,20 +152,20 @@ public class MySlotGame extends SlotContext {
             target.setReelSets(new ArrayList<>(source.getReelSets()));
         }
 
-        if (source.getMainGameReelSetIndexes() != null) {
-            target.setMainGameReelSetIndexes(new ArrayList<>(source.getMainGameReelSetIndexes()));
+        if (source.getReelSetIndexes() != null) {
+            target.setReelSetIndexes(source.getReelSetIndexes());
         }
 
-        if (source.getMainGameReelSetChances() != null) {
-            target.setMainGameReelSetChances(new ArrayList<>(source.getMainGameReelSetChances()));
+        if (source.getReelSetChances() != null) {
+            target.setReelSetChances(source.getReelSetChances());
         }
 
-        if (source.getReactionGameReelSetIndexes() != null) {
-            target.setReactionGameReelSetIndexes(new ArrayList<>(source.getReactionGameReelSetIndexes()));
+        if (source.getTileWeights() != null) {
+            target.setTileWeights(copyTileWeights(source.getTileWeights()));
         }
 
-        if (source.getReactionGameReelSetChances() != null) {
-            target.setReactionGameReelSetChances(new ArrayList<>(source.getReactionGameReelSetChances()));
+        if (source.getTileIds() != null) {
+            target.setTileIds(copyMap(source.getTileIds()));
         }
 
         if (source.getLineDefinitions() != null) {
@@ -204,6 +220,15 @@ public class MySlotGame extends SlotContext {
     private static <K, V> Map<K, V> copyMap(Map<K, V> original) {
         if (original == null) return null;
         return new TreeMap<>(original);
+    }
+
+    private static TreeMap<Integer, List<Double>> copyTileWeights(TreeMap<Integer, List<Double>> original) {
+        if (original == null) return null;
+        TreeMap<Integer, List<Double>> copy = new TreeMap<>();
+        for (Map.Entry<Integer, List<Double>> entry : original.entrySet()) {
+            copy.put(entry.getKey(), new ArrayList<>(entry.getValue()));
+        }
+        return copy;
     }
 
     private static Map<String, List<Integer>> copyStringListMap(Map<String, List<Integer>> original) {

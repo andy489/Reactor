@@ -10,7 +10,7 @@ import java.util.List;
 
 import static com.relax.reactor.service.gamelogic.core.util.HelperGameLogicMethods.roundToPrecision;
 
-public class P07_GambleChoicePostSpinProcessor implements SlotSpinProcessor {
+public class P08_GambleChoicePostSpinProcessor implements SlotSpinProcessor {
 
     @Override
     public void processSpin(SlotGameDto spinData, SlotContext slotContext, List<Integer> currentStates,

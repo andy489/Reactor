@@ -4,17 +4,24 @@ import com.relax.reactor.service.gamelogic.core.SlotSpinProcessor;
 import com.relax.reactor.service.gamelogic.core.data.SlotContext;
 import com.relax.reactor.service.gamelogic.core.data.SlotGameStickyData;
 import com.relax.reactor.service.gamelogic.dto.SlotGameDto;
+import com.relax.reactor.service.gamelogic.enumerated.AvalancheMode;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
 import java.util.List;
 
-public class P02_StickyApplierProcessor implements SlotSpinProcessor {
+@Setter
+@Accessors(chain = true)
+public class P01_StickyApplierProcessor implements SlotSpinProcessor {
+
+    private AvalancheMode avalancheMode;
 
     @Override
     public void processSpin(SlotGameDto spinData, SlotContext slotContext, List<Integer> currentStates,
                             int reelsSetIndex, List<Integer> reelStopPositions, double totalStake,
                             SlotGameStickyData parentStickyData, int recursionLevel) {
 
-        if (recursionLevel >= 0) {
+        if (recursionLevel > 0 && avalancheMode == AvalancheMode.REGENERATE) {
 
             int SIZE = parentStickyData.getStickyReels().size();
 

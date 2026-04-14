@@ -8,7 +8,7 @@ import com.relax.reactor.service.gamelogic.dto.payout.BaseDto;
 
 import java.util.List;
 
-public class P05_SlotSumPayoutsProcessor implements SlotSpinProcessor {
+public class P06_SlotSumPayoutsProcessor implements SlotSpinProcessor {
 
     @Override
     public void processSpin(SlotGameDto spinData, SlotContext slotContext, List<Integer> currentStates,

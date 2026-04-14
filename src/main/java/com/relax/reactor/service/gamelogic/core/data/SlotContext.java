@@ -4,6 +4,7 @@ import com.relax.reactor.rng.RNG;
 import com.relax.reactor.service.gamelogic.core.SlotSpinProcessor;
 import com.relax.reactor.service.gamelogic.core.SpinHandlers;
 import com.relax.reactor.service.gamelogic.dto.SlotGameDto;
+import com.relax.reactor.service.gamelogic.enumerated.AvalancheMode;
 import com.relax.reactor.service.gamelogic.enumerated.PayTableType;
 import com.relax.reactor.service.gamelogic.enumerated.Strategy;
 import com.relax.reactor.service.gamelogic.enumerated.WildMultipliersAggregationType;
@@ -12,12 +13,15 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
+import org.apache.commons.lang3.NotImplementedException;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+
+import static com.relax.reactor.service.gamelogic.core.util.UtilConstants.*;
 
 @Getter
 @Setter
@@ -31,7 +35,7 @@ public class SlotContext extends SpinHandlers implements Serializable {
     protected String gameName;
     protected Integer slotId;
     protected Integer version;
-    protected Double sharpRtp;
+    protected Map<AvalancheMode, Double> sharpRtp;
     protected Integer stateNum;
 
     protected Map<Integer, String> stateDescriptor;
@@ -49,11 +53,8 @@ public class SlotContext extends SpinHandlers implements Serializable {
 
     protected List<ReelSet> reelSets;
 
-    protected List<Integer> mainGameReelSetIndexes;
-    protected List<Double> mainGameReelSetChances;
-
-    protected List<Integer> reactionGameReelSetIndexes;
-    protected List<Double> reactionGameReelSetChances;
+    protected TreeMap<Integer, List<Integer>> reelSetIndexes;
+    protected TreeMap<Integer, List<Double>> reelSetChances;
 
     protected Integer linesNum;
     protected List<List<Integer>> lineDefinitions;
@@ -61,8 +62,10 @@ public class SlotContext extends SpinHandlers implements Serializable {
     protected PayTableType payTableType;
     protected Map<Integer, TreeMap<Integer, Double>> payTable;
     protected List<List<Integer>> neighbors;
+    protected TreeMap<Integer, List<Double>> tileWeights;
 
     protected Strategy strategy;
+    protected AvalancheMode avalancheMode;
     protected Double minStake;
     protected Integer minMatch;
 
@@ -74,13 +77,28 @@ public class SlotContext extends SpinHandlers implements Serializable {
     public SlotGameDto createSlotSpin(List<Integer> states, int reelsSetIndex, List<Integer> reelsStopPositions,
                                       double stake, SlotGameStickyData slotGameStickyData, int recursionLevel) {
 
+        List<List<Integer>> grid = new ArrayList<>();
+        int reelsNum = gridDim.get(SCREEN_REELS_IND);
+        int rowsNum = gridDim.get(SCREEN_ROWS_IND);
+
+        for (int i = 0; i < reelsNum; i++) {
+            List<Integer> currGridReel = new ArrayList<>();
+
+            for (int j = 0; j < rowsNum; j++) {
+                currGridReel.add(INVALID_TILE_ID);
+            }
+
+            grid.add(currGridReel);
+        }
+
         SlotGameDto slotGameDto = new SlotGameDto()
                 .setReelStopPositions(reelsStopPositions)
                 .setPayoutData(new ArrayList<>())
                 .setReelsSetIndex(reelsSetIndex)
                 .setStakeMultiplier(1.0)
                 .setRecursionLevel(recursionLevel)
-                .setGridDim(this.gridDim);
+                .setGridDim(this.gridDim)
+                .setGrid(grid);
 
         slotGameDto.setWinAmount(0.0d);
 
@@ -126,8 +144,19 @@ public class SlotContext extends SpinHandlers implements Serializable {
             actualStates = new ArrayList<>(states);
         }
 
-        int reelSetIndex = generateMainReelSetIndex();
-        List<Integer> reelsStopPositions = generateReelsStopPositions(reelSetIndex);
+        int reelSetIndex = 0;
+        List<Integer> reelsStopPositions = null;
+        switch (avalancheMode) {
+            case REGENERATE -> {
+                reelSetIndex = -1;
+                reelsStopPositions = new ArrayList<>();
+            }
+
+            case CASCADE, REROLL -> {
+                reelSetIndex = generateMainReelSetIndex();
+                reelsStopPositions = generateReelsStopPositions(reelSetIndex);
+            }
+        }
 
         SlotGameStickyData slotGameStickyData = new SlotGameStickyData();
         int recursionLevel = 0;
@@ -136,7 +165,7 @@ public class SlotContext extends SpinHandlers implements Serializable {
     }
 
     public int generateMainReelSetIndex() {
-        return rng.getWeightedIndex(this.mainGameReelSetIndexes, this.mainGameReelSetChances);
+        return rng.getWeightedIndex(this.reelSetIndexes.get(0), this.reelSetChances.get(0));
     }
 
     public List<Integer> generateReelsStopPositions(int reelsSetIndex) {

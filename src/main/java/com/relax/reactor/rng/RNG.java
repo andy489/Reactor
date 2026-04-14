@@ -67,7 +67,7 @@ public class RNG {
                         items + " at position #" + predefinedSequenceRNG.getResultsConsumed());
             }
 
-            return items.get(index);
+            return index;
         } else {
             randomCallsMade++;
             return getRandomWeightedIndex(items, chances);
@@ -101,7 +101,7 @@ public class RNG {
         for (int i = 0; i < items.size(); i++) {
             cumulativeProbability += chances.get(i);
             if (randomValue < cumulativeProbability) {
-                return items.get(i);
+                return i;
             }
         }
 
@@ -128,7 +128,7 @@ public class RNG {
                         items + " at position #" + predefinedSequenceRNG.getResultsConsumed());
             }
 
-            return items.get(index);
+            return index;
         } else {
             randomCallsMade++;
             return getRandomUniformIndex(items);

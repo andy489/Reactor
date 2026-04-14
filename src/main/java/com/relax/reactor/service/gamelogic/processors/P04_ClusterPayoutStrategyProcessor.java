@@ -18,7 +18,7 @@ import java.util.TreeMap;
 
 @Setter
 @Accessors(chain = true)
-public class P03_ClusterPayoutStrategyProcessor implements SlotSpinProcessor {
+public class P04_ClusterPayoutStrategyProcessor implements SlotSpinProcessor {
 
     private Map<Integer, TreeMap<Integer, Double>> payouts;
 
