@@ -376,9 +376,9 @@ Forces exact reel stops in order.
 Sequence format:
 
 - Comma-separated integers (0-based symbol index per reel)
-- Example[REGENERATE]: `1,2,3,4,5,6,7,8,2,3,4,5,6,7,8,1,3,4,5,6,7,8,1,2,4,5,6,7,8,1,2,3,5,6,7,8,1,2,3,4,6,7,8,1,2,3,4,5,7,8,1,2,3,4,5,6,8,1,2,3,4,5,6,7` →
+- Example **[REGENERATE]**: `1,2,3,4,5,6,7,8,2,3,4,5,6,7,8,1,3,4,5,6,7,8,1,2,4,5,6,7,8,1,2,3,5,6,7,8,1,2,3,4,6,7,8,1,2,3,4,5,7,8,1,2,3,4,5,6,8,1,2,3,4,5,6,7` →
   - 1,2,3,4,... tile ids column by column, row by row
-- Example[REROLL]: `0,1,2,3,4,5,6,7,8,1,11,12,13,14,15,16,17,18` → 
+- Example **[REROLL]**: `0,1,2,3,4,5,6,7,8,1,11,12,13,14,15,16,17,18` → 
   - 0 = choose reels set with index 0 (the only one available currently for base spin (since it is with 100% chance))
   - 1,2,3,4,5,6,7,8 = reel stop positions for base spin
   - 1 = choose reels set with index 1 (the only one available currently for reaction re-spin (since it is with 100% chance)) 
