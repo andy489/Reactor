@@ -1,7 +1,7 @@
 # Slot Game API Documentation
 ## Overview
 
-<a href="./assets/Relax_Gamimng_Avalanche.pdf" target="_blank">Relax Gaming Avalanche Mechanics</a>
+<a href="./assets/Relax_Gaming_Avalanche.pdf" target="_blank">Relax Gaming Avalanche Mechanics</a>
 
 ## Prerequisites
 
