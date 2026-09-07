@@ -105,15 +105,76 @@ Payout = multiplier × stake.
 
 ### Avalanche / Cascade Modes
 
-After a winning cluster explodes, the grid reacts. Three modes control how the vacated positions are refilled:
+These three modes are the **core mechanical differentiator** of the engine. After every winning spin, matched cluster tiles explode. The vacated positions must be refilled to form a new grid — the mode defines exactly how.
 
-| Mode | Refill mechanism | RTP (sharp) |
-|------|-----------------|-------------|
-| `REGENERATE` | Empty cells (tile ID < 0) are filled individually by weighted random draw | 55.89% |
-| `CASCADE` | Surviving tiles slide down; reel strips advance to fill the top | 94.06% |
-| `REROLL` | Full 8-reel re-spin using the reaction reel set (index 1) | 97.46% |
+The reaction loop is recursive: after refill, the new grid is evaluated again for clusters. If another win is found, tiles explode again and the mode's refill logic runs again. This continues until no winning cluster can be formed on the resulting grid. Every reaction round produces its own `SlotGameDto` node in the response.
 
-Cascades repeat recursively until no new cluster forms. Each reaction round is a separate `SlotGameDto` node in the response tree, flattened by `linearize()`.
+| Mode | RTP (sharp) |
+|------|-------------|
+| `REGENERATE` | 55.89% |
+| `CASCADE` | 94.06% |
+| `REROLL` | 97.46% |
+
+---
+
+#### REGENERATE
+
+> Exploded positions are refilled one tile at a time by independent weighted random draws.
+
+**Initial spin:** The reel strips are not used. `reelSetIndex = -1`. Every cell on the 8×8 grid is populated by calling `rng.getWeightedIndex(tileIds, tileWeights[0])` — one RNG call per cell, 64 calls total for a fresh grid.
+
+**After a win (recursion > 0):**
+1. P01 runs **before** P02. It overlays the surviving (non-exploded) tiles from `SlotGameStickyData` onto the freshly initialised empty grid.
+2. P02 then fills only the cells whose tile ID is still `< 0` (the exploded positions). Each such cell gets an independent weighted RNG draw using `tileWeights[recursionLevel]` — so the weight distribution can change with each cascade depth.
+3. The result is a new grid where surviving tiles are exactly where they were and exploded positions have brand-new random tiles.
+
+**Key properties:**
+- Purely random refill — each exploded cell is independent, no reel strip involved.
+- Surviving tiles never move — they stay in the same grid position.
+- Weight table is keyed by recursion level, allowing deeper cascades to have different symbol frequencies.
+- Blockers (tile ID 10) can appear on the initial spin; the reaction reel set (used by REROLL/CASCADE) excludes them.
+- Lower RTP (55.89%) because surviving tiles don't slide — the grid can fragment, making it harder to form new large clusters.
+
+---
+
+#### CASCADE
+
+> Surviving tiles gravity-fall downward; reel strips advance to fill vacated top positions.
+
+**Initial spin:** `reelSetIndex` is chosen by weighted RNG from `reelSetIndexes[0]`. Stop positions for all 8 reels are generated: `reelStopPositions[i] = rng.getUniformIndex(0, reelLength)`. P02 reads each reel's strip starting at the stop position and fills the grid column-by-column (reel = column, row 0 = top).
+
+**After a win (recursion > 0):**
+1. P02 fills the entire grid from the reel strip at a **new stop position per reel**: for each reel that had at least one exploding tile, the stop position is decremented by 1 (wrapping). This simulates the reel strip advancing upward by one position — the "new" tiles fall in from the top.
+2. P03 runs **after** P02. It overlays the surviving tiles from `SlotGameStickyData` onto the grid, overwriting what P02 placed in those positions. This restores all tiles that did not explode to their exact previous positions.
+3. The net effect: surviving tiles are back in their slots; the exploded positions now hold whatever was one position higher on the reel strip.
+
+**Key properties:**
+- Tile movement is physically coherent — surviving tiles don't move, new tiles come from above on the reel strip.
+- Only reels with at least one explosion get their stop position decremented; untouched reels keep the same slice.
+- Uses the same reel set (index 0) for all cascade rounds — the main spin reel set is threaded through all recursion levels.
+- Higher RTP (94.06%) because reel strips are designed with higher symbol density and no blockers in reaction rounds.
+
+---
+
+#### REROLL
+
+> Every cascade is a full independent re-spin of all 8 reels using a dedicated reaction reel set.
+
+**Initial spin:** Identical to CASCADE — weighted reel-set selection, random stop positions, grid populated from reel strips.
+
+**After a win (recursion > 0):**
+1. A **new reel-set index** is chosen by weighted RNG from `reelSetIndexes[recursionLevel]` (using `floorEntry` so the same table entry applies to all deeper levels if not explicitly overridden).
+2. New random stop positions are generated for all 8 reels against the selected reaction reel set (index 1 — no blockers).
+3. P02 populates the full 8×8 grid from scratch using these new stop positions.
+4. P03 runs **after** P02 and overlays the surviving tiles from `SlotGameStickyData`, restoring all non-exploded tiles to their exact positions.
+5. The remaining cells (exploded positions) are whatever the new reel spin placed there.
+
+**Key properties:**
+- Each cascade is a completely fresh spin — the reaction grid is drawn from the reaction reel set (no blockers) with independent random stops.
+- Unlike CASCADE, the stop positions are not derived from the previous spin — there is no "advancing" of a strip. It is a full re-roll.
+- Surviving tiles are still preserved and overlaid (same P03 mechanism as CASCADE).
+- The reaction reel set is configured separately from the main spin reel set, allowing tuned win frequency for cascade rounds.
+- Highest RTP (97.46%) because every cascade round is a full re-spin against a high-density, blocker-free reel set.
 
 ### Gamble Feature
 
