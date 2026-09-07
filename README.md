@@ -137,9 +137,6 @@ GET /slot/settings
 
 Returns the full game configuration including grid dimensions, symbol definitions, pay table, reel strips, and configured avalanche mode.
 
-<details>
-<summary>Example response</summary>
-
 ```json
 {
   "gameName": "Relax Gaming Cluster Reactor",
@@ -153,29 +150,58 @@ Returns the full game configuration including grid dimensions, symbol definition
   "stateNum": 1,
   "hasChoice": true,
   "gridDim": [8, 8],
-  "tileIds": {"high": [1,2,3,4], "low": [5,6,7,8], "wild": [9], "blocker": [10]},
-  "tileNames": {"1":"H1","2":"H2","3":"H3","4":"H4","5":"L1","6":"L2","7":"L3","8":"L4","9":"WILD","10":"BLOCKER"},
+  "tileIds": {"high": [1, 2, 3, 4], "low": [5, 6, 7, 8], "wild": [9], "blocker": [10]},
+  "tileNames": {"1": "H1", "2": "H2", "3": "H3", "4": "H4", "5": "L1", "6": "L2", "7": "L3", "8": "L4", "9": "WILD", "10": "BLOCKER"},
   "payTableType": "INTERVAL_BASED",
   "payTable": {
-    "1": {"5":0.5,"9":0.6,"13":0.7,"17":0.8,"21":1},
-    "2": {"5":0.4,"9":0.5,"13":0.6,"17":0.7,"21":0.9},
-    "3": {"5":0.4,"9":0.5,"13":0.6,"17":0.7,"21":0.9},
-    "4": {"5":0.3,"9":0.4,"13":0.5,"17":0.6,"21":0.7},
-    "5": {"5":0.1,"9":0.2,"13":0.3,"17":0.4,"21":0.5},
-    "6": {"5":0.1,"9":0.2,"13":0.3,"17":0.4,"21":0.5},
-    "7": {"5":0.1,"9":0.2,"13":0.3,"17":0.4,"21":0.5},
-    "8": {"5":0.1,"9":0.2,"13":0.3,"17":0.4,"21":0.5}
+    "1": {"5": 0.5, "9": 0.6, "13": 0.7, "17": 0.8, "21": 1},
+    "2": {"5": 0.4, "9": 0.5, "13": 0.6, "17": 0.7, "21": 0.9},
+    "3": {"5": 0.4, "9": 0.5, "13": 0.6, "17": 0.7, "21": 0.9},
+    "4": {"5": 0.3, "9": 0.4, "13": 0.5, "17": 0.6, "21": 0.7},
+    "5": {"5": 0.1, "9": 0.2, "13": 0.3, "17": 0.4, "21": 0.5},
+    "6": {"5": 0.1, "9": 0.2, "13": 0.3, "17": 0.4, "21": 0.5},
+    "7": {"5": 0.1, "9": 0.2, "13": 0.3, "17": 0.4, "21": 0.5},
+    "8": {"5": 0.1, "9": 0.2, "13": 0.3, "17": 0.4, "21": 0.5},
+    "10": {"5": 0}
   },
   "strategy": "CLUSTERS_PAYS",
   "avalancheMode": "REGENERATE",
   "minStake": 0.1,
   "minMatch": 5,
   "wildMultipliers": {"9": 0},
-  "wildMultipliersAggregations": {"9": "NONE"}
+  "wildMultipliersAggregations": {"9": "NONE"},
+  "reelSets": [
+    {
+      "setName": "0:MAIN SPIN:BLOCKERS INCLUDED:STACKS SIZES[1,2,3]:STACK WEIGHTS[181,18,1]:MIN DISTANCE BETWEEN 2 STACKS WITH SAME TILE IDS[0]",
+      "reelSet": [
+        [8, 6, 10, 9, 6, 6, 6, 6, 6, 1, 4, 10, 10, 4, 5, 6, 9, 9, 10, 10, 3, 9, 2, 2, 3, 10, 4, 6, 9, 2, 4, 3, 2, 6, 1, 1, 10, 5, 1, 10, 10, 6, 9, 7, 4, 8, 10, 5, 3, 9, 3, 6, 7, 1, 1, 7, 7, 3, 4, 1, 1, 8, 5, 2, 2, 8, 7, 2, 2, 8, 4, 5, 9, 5, 5, 8, 8, 6, 9, 2, 5, 10, 6, 6, 1, 1, 4, 3, 2, 7, 7, 8, 10, 10, 3, 5, 1, 7, 7, 4, 1, 5, 5, 1, 7, 1, 8, 10, 1, 4, 5, 5, 8, 7, 9, 9, 4, 2, 7, 7, 8, 9, 5, 5, 3, 10, 5, 10, 3, 9, 3, 4, 10, 2, 6, 8, 2, 7, 2, 4, 10, 10, 10, 7, 6, 4, 1, 2, 6, 9, 1, 8, 8, 5, 5, 3, 2, 8, 5, 8, 6, 9, 1, 5, 1, 9, 1, 3, 9, 2, 2, 2, 3, 3, 3, 3, 7, 4, 7, 6, 4, 4, 4, 3, 4, 3, 8, 2, 4, 6, 8, 9, 8, 8, 9, 9, 7, 3, 7, 7],
+        [7, 6, 8, 3, 3, 8, 7, 3, 9, 9, 9, 9, 4, 4, 7, 7, 10, 3, 2, 2, 5, 6, 5, 4, 2, 9, 4, 8, 3, 3, 2, 1, 9, 1, 10, 10, 2, 1, 7, 5, 7, 9, 8, 5, 2, 5, 4, 4, 1, 2, 10, 4, 6, 6, 4, 5, 5, 3, 8, 4, 8, 4, 5, 3, 5, 2, 6, 6, 6, 8, 6, 7, 5, 5, 2, 2, 7, 1, 7, 5, 4, 3, 3, 8, 6, 2, 2, 2, 7, 8, 5, 8, 8, 8, 8, 8, 6, 6, 3, 2, 1, 6, 6, 6, 9, 7, 10, 8, 7, 3, 10, 10, 10, 3, 5, 9, 10, 8, 2, 7, 4, 7, 7, 2, 5, 9, 10, 4, 7, 1, 1, 2, 5, 3, 2, 6, 6, 3, 2, 1, 8, 10, 5, 5, 5, 5, 10, 2, 4, 8, 8, 9, 3, 10, 3, 4, 7, 7, 8, 9, 6, 3, 3, 10, 6, 9, 4, 6, 3, 7, 6, 9, 7, 10, 4, 1, 1, 1, 1, 9, 9, 4, 4, 9, 1, 10, 9, 4, 9, 1, 1, 9, 10, 1, 1, 10, 10, 10, 1, 1],
+        [3, 3, 4, 4, 1, 1, 8, 5, 3, 3, 5, 6, 4, 3, 10, 10, 6, 4, 1, 5, 6, 6, 9, 5, 7, 3, 4, 5, 1, 8, 7, 9, 6, 4, 6, 10, 1, 5, 6, 8, 5, 3, 3, 5, 5, 4, 4, 4, 9, 10, 9, 2, 6, 7, 10, 8, 6, 6, 8, 7, 8, 10, 4, 4, 9, 10, 7, 7, 7, 3, 6, 6, 6, 10, 9, 10, 4, 7, 7, 4, 3, 4, 4, 9, 10, 3, 1, 2, 8, 1, 10, 6, 8, 8, 8, 2, 6, 5, 7, 10, 10, 4, 4, 4, 10, 3, 6, 3, 5, 5, 7, 9, 9, 3, 3, 6, 6, 5, 3, 4, 9, 6, 2, 4, 8, 7, 8, 9, 10, 2, 2, 2, 3, 10, 9, 5, 7, 10, 8, 1, 2, 6, 9, 8, 5, 1, 7, 9, 2, 7, 5, 7, 2, 7, 7, 5, 9, 9, 9, 8, 9, 10, 2, 3, 3, 5, 5, 10, 10, 5, 8, 1, 8, 8, 7, 1, 2, 7, 1, 1, 1, 1, 9, 9, 1, 8, 3, 2, 8, 2, 2, 1, 2, 2, 1, 1, 2, 1, 2, 2],
+        [6, 7, 10, 8, 4, 9, 1, 10, 1, 8, 3, 3, 6, 8, 6, 9, 7, 5, 1, 1, 7, 7, 5, 7, 4, 5, 4, 9, 2, 2, 4, 4, 1, 8, 6, 8, 5, 8, 8, 1, 4, 5, 4, 5, 1, 8, 8, 6, 6, 7, 4, 9, 9, 6, 6, 8, 8, 1, 5, 1, 4, 1, 7, 2, 6, 6, 6, 6, 9, 6, 7, 10, 10, 8, 4, 5, 5, 1, 1, 5, 8, 7, 8, 5, 10, 4, 1, 2, 6, 8, 3, 1, 2, 5, 6, 6, 7, 9, 3, 4, 5, 4, 8, 3, 2, 3, 2, 7, 1, 8, 7, 7, 3, 3, 5, 5, 10, 6, 7, 7, 4, 10, 7, 8, 9, 10, 10, 8, 7, 8, 1, 1, 4, 2, 4, 1, 7, 3, 5, 4, 3, 3, 2, 2, 10, 1, 9, 2, 9, 4, 7, 2, 3, 1, 2, 10, 10, 6, 6, 3, 3, 7, 5, 3, 10, 2, 5, 5, 4, 4, 2, 6, 5, 9, 10, 2, 10, 3, 10, 10, 2, 3, 9, 2, 9, 9, 2, 9, 9, 10, 3, 10, 10, 9, 3, 9, 2, 9, 3, 9],
+        [4, 7, 7, 7, 1, 9, 7, 7, 8, 2, 5, 4, 5, 2, 2, 2, 2, 6, 1, 1, 1, 8, 6, 7, 7, 10, 8, 3, 10, 7, 7, 7, 2, 9, 8, 3, 4, 7, 4, 8, 10, 2, 9, 7, 7, 8, 9, 2, 10, 6, 2, 7, 8, 3, 6, 10, 5, 2, 9, 8, 8, 1, 9, 7, 9, 8, 3, 5, 1, 3, 5, 6, 3, 9, 6, 1, 1, 1, 7, 4, 10, 9, 10, 10, 4, 8, 3, 6, 4, 8, 6, 3, 4, 5, 6, 9, 4, 1, 2, 6, 3, 2, 9, 6, 7, 2, 2, 2, 5, 10, 7, 5, 1, 8, 2, 6, 9, 5, 5, 9, 1, 7, 7, 2, 5, 8, 3, 3, 10, 3, 1, 5, 1, 10, 5, 5, 9, 9, 6, 10, 2, 5, 4, 3, 3, 3, 10, 4, 2, 10, 3, 9, 9, 2, 10, 9, 4, 10, 8, 4, 4, 1, 3, 3, 3, 10, 9, 9, 4, 5, 6, 6, 10, 5, 10, 10, 4, 4, 4, 8, 5, 5, 5, 8, 4, 6, 1, 4, 8, 3, 8, 1, 6, 6, 8, 6, 1, 6, 1, 1],
+        [8, 7, 10, 4, 1, 3, 3, 9, 3, 5, 5, 3, 8, 7, 7, 1, 10, 3, 9, 9, 10, 7, 9, 2, 7, 1, 6, 6, 7, 7, 10, 4, 1, 1, 9, 4, 10, 10, 9, 3, 3, 3, 4, 7, 4, 2, 4, 2, 10, 1, 10, 7, 1, 7, 6, 6, 1, 7, 6, 9, 1, 1, 8, 2, 2, 8, 9, 6, 5, 5, 2, 5, 5, 4, 3, 6, 1, 3, 3, 6, 5, 10, 10, 7, 10, 9, 4, 4, 9, 9, 10, 8, 4, 3, 10, 10, 10, 8, 9, 1, 1, 8, 9, 9, 2, 2, 6, 10, 9, 9, 3, 3, 9, 3, 7, 7, 1, 2, 2, 1, 1, 8, 8, 2, 2, 4, 4, 6, 9, 8, 3, 9, 3, 4, 4, 7, 7, 5, 1, 8, 8, 8, 9, 8, 2, 4, 6, 2, 6, 7, 5, 2, 7, 3, 7, 6, 2, 10, 10, 6, 3, 10, 2, 3, 6, 10, 2, 8, 2, 4, 4, 6, 5, 1, 1, 1, 4, 8, 2, 6, 7, 6, 5, 6, 6, 5, 5, 4, 5, 4, 8, 5, 8, 5, 8, 8, 5, 5, 5, 5],
+        [9, 9, 9, 5, 8, 10, 8, 10, 10, 3, 10, 6, 5, 8, 2, 5, 10, 6, 10, 4, 4, 3, 10, 8, 4, 1, 1, 6, 6, 6, 4, 6, 8, 3, 2, 9, 6, 9, 1, 5, 3, 7, 1, 4, 1, 1, 7, 9, 3, 7, 4, 2, 8, 1, 5, 10, 1, 10, 10, 2, 3, 4, 3, 1, 4, 4, 6, 2, 2, 5, 1, 4, 8, 3, 8, 8, 7, 4, 2, 8, 4, 5, 3, 7, 9, 10, 3, 3, 5, 1, 4, 1, 1, 10, 1, 8, 7, 4, 7, 5, 5, 3, 3, 7, 7, 5, 9, 2, 9, 9, 2, 2, 2, 4, 2, 2, 10, 2, 8, 8, 5, 2, 6, 2, 10, 10, 2, 6, 1, 10, 3, 3, 3, 8, 1, 10, 6, 9, 7, 9, 5, 7, 4, 7, 5, 9, 2, 2, 6, 7, 1, 9, 10, 5, 10, 10, 1, 7, 4, 4, 1, 1, 4, 7, 4, 7, 7, 2, 8, 8, 8, 7, 6, 7, 7, 6, 8, 6, 6, 5, 9, 9, 6, 6, 3, 9, 9, 9, 9, 8, 6, 8, 5, 5, 3, 5, 3, 3, 5, 6],
+        [3, 3, 3, 5, 3, 1, 1, 7, 7, 2, 8, 3, 2, 3, 3, 6, 6, 1, 10, 10, 5, 3, 10, 7, 9, 4, 1, 7, 10, 9, 9, 5, 9, 9, 9, 1, 4, 5, 5, 5, 10, 9, 7, 2, 1, 1, 3, 1, 7, 5, 1, 9, 9, 3, 3, 2, 7, 4, 6, 1, 8, 8, 8, 2, 3, 9, 4, 2, 1, 6, 6, 6, 8, 5, 9, 10, 2, 1, 8, 9, 10, 9, 7, 7, 10, 7, 3, 7, 7, 3, 5, 8, 6, 5, 5, 3, 3, 2, 2, 9, 6, 9, 3, 5, 9, 9, 9, 10, 4, 6, 3, 8, 9, 4, 2, 6, 1, 6, 6, 3, 3, 6, 9, 10, 7, 2, 2, 5, 7, 4, 7, 4, 4, 10, 10, 5, 8, 7, 6, 8, 8, 8, 7, 7, 7, 8, 2, 2, 10, 8, 2, 1, 6, 6, 7, 4, 8, 8, 2, 6, 5, 4, 8, 8, 4, 2, 1, 2, 8, 10, 10, 4, 6, 4, 4, 1, 2, 4, 10, 8, 1, 2, 5, 5, 10, 10, 6, 4, 1, 5, 5, 5, 1, 1, 4, 4, 10, 10, 6, 4],
+        [5, 1, 7, 7, 7, 5, 10, 10, 10, 10, 9, 5, 9, 9, 1, 7, 8, 10, 2, 1, 1, 6, 6, 5, 5, 5, 10, 1, 8, 9, 8, 8, 8, 4, 3, 9, 9, 9, 1, 10, 1, 3, 2, 8, 2, 3, 6, 6, 2, 3, 9, 6, 1, 5, 1, 5, 5, 3, 3, 3, 8, 10, 3, 2, 9, 7, 7, 1, 6, 7, 2, 6, 8, 6, 9, 3, 3, 3, 8, 8, 8, 5, 3, 3, 5, 9, 1, 1, 6, 2, 3, 4, 3, 7, 7, 7, 4, 1, 10, 1, 10, 6, 9, 10, 8, 2, 6, 4, 4, 2, 8, 8, 2, 6, 5, 6, 3, 1, 1, 1, 2, 1, 8, 8, 7, 8, 3, 3, 6, 5, 10, 10, 3, 1, 5, 5, 4, 6, 10, 3, 7, 10, 8, 2, 1, 7, 10, 6, 6, 6, 9, 10, 4, 4, 6, 7, 4, 10, 2, 7, 9, 9, 9, 9, 5, 5, 8, 2, 8, 7, 2, 2, 10, 2, 7, 6, 5, 4, 2, 4, 5, 2, 2, 10, 4, 4, 7, 9, 4, 4, 5, 9, 9, 7, 7, 4, 4, 4, 4, 4]
+      ]
+    },
+    {
+      "setName": "1:REACTIONS: NO BLOCKERS:STACKS SIZES[1,2,3]:STACK WEIGHTS[181,18,1]:MIN DISTANCE BETWEEN 2 STACKS WITH SAME TILE IDS[0]",
+      "reelSet": [
+        [8, 7, 6, 8, 1, 1, 5, 5, 9, 9, 3, 9, 9, 9, 4, 4, 8, 2, 8, 8, 4, 4, 7, 4, 6, 1, 5, 1, 5, 2, 3, 3, 3, 5, 8, 7, 4, 5, 3, 3, 3, 3, 2, 8, 4, 4, 8, 8, 9, 5, 8, 3, 8, 3, 4, 8, 5, 8, 5, 2, 4, 9, 4, 7, 5, 5, 4, 1, 1, 6, 5, 8, 2, 3, 8, 8, 1, 1, 7, 8, 9, 4, 7, 1, 1, 4, 9, 7, 7, 9, 3, 1, 3, 2, 1, 9, 3, 2, 3, 4, 6, 9, 8, 6, 1, 7, 9, 9, 9, 6, 2, 8, 1, 2, 3, 5, 8, 4, 1, 1, 6, 6, 2, 7, 5, 5, 5, 4, 2, 1, 2, 9, 9, 1, 5, 9, 4, 5, 1, 9, 4, 3, 6, 1, 2, 4, 6, 6, 5, 7, 7, 7, 2, 2, 5, 3, 6, 7, 2, 6, 6, 2, 7, 3, 3, 9, 6, 6, 7, 2, 2, 2, 7, 7, 7, 6, 7, 6, 6, 6],
+        [8, 2, 6, 8, 3, 8, 5, 9, 7, 2, 8, 3, 7, 8, 5, 2, 7, 4, 5, 5, 4, 3, 5, 7, 9, 6, 9, 9, 8, 3, 9, 8, 3, 9, 8, 8, 8, 2, 8, 4, 5, 5, 3, 2, 6, 7, 1, 9, 1, 5, 6, 5, 5, 6, 1, 1, 1, 3, 3, 8, 8, 3, 2, 4, 1, 4, 4, 9, 2, 3, 1, 4, 6, 4, 1, 6, 4, 2, 2, 5, 2, 1, 6, 9, 4, 3, 1, 7, 2, 5, 4, 6, 7, 2, 9, 3, 4, 2, 6, 3, 6, 4, 1, 7, 2, 5, 3, 3, 1, 9, 2, 4, 4, 9, 3, 4, 8, 8, 1, 8, 9, 9, 2, 7, 9, 8, 5, 5, 6, 1, 4, 1, 4, 6, 6, 5, 5, 9, 5, 8, 8, 9, 6, 4, 4, 5, 5, 8, 3, 3, 9, 6, 6, 9, 9, 1, 3, 7, 3, 1, 2, 2, 2, 7, 1, 6, 7, 1, 1, 2, 6, 6, 7, 7, 7, 7, 7, 7, 7, 7],
+        [3, 3, 7, 2, 9, 4, 1, 9, 8, 9, 5, 7, 2, 7, 2, 6, 2, 6, 2, 2, 6, 3, 3, 4, 5, 8, 6, 6, 1, 2, 5, 4, 1, 5, 5, 7, 5, 7, 9, 2, 4, 2, 2, 1, 3, 9, 7, 5, 8, 9, 6, 6, 5, 8, 6, 4, 7, 6, 6, 6, 8, 7, 7, 7, 1, 3, 7, 5, 6, 1, 6, 8, 9, 6, 8, 7, 4, 6, 4, 1, 4, 2, 2, 2, 6, 6, 4, 2, 1, 1, 8, 2, 9, 3, 3, 7, 8, 9, 1, 2, 7, 7, 3, 5, 5, 6, 8, 8, 4, 4, 1, 8, 4, 2, 5, 2, 7, 7, 5, 7, 9, 9, 9, 4, 4, 5, 5, 8, 7, 2, 9, 4, 5, 7, 6, 1, 6, 8, 8, 4, 5, 1, 1, 2, 5, 8, 3, 4, 4, 4, 8, 1, 1, 5, 1, 5, 1, 1, 3, 4, 3, 3, 3, 8, 9, 3, 1, 9, 8, 3, 8, 3, 9, 9, 9, 3, 3, 9, 3, 9],
+        [5, 4, 9, 8, 8, 1, 1, 2, 4, 8, 3, 5, 5, 5, 7, 5, 1, 1, 9, 1, 2, 9, 6, 4, 1, 3, 7, 4, 5, 7, 5, 9, 3, 6, 5, 1, 1, 1, 7, 4, 3, 9, 9, 6, 1, 6, 6, 6, 6, 6, 1, 5, 5, 6, 6, 3, 7, 4, 4, 4, 8, 9, 9, 8, 1, 8, 5, 2, 1, 4, 7, 5, 5, 5, 8, 8, 1, 2, 1, 9, 9, 5, 5, 4, 4, 2, 1, 9, 5, 2, 3, 6, 6, 2, 3, 3, 2, 3, 3, 5, 5, 7, 7, 7, 9, 9, 5, 6, 2, 3, 3, 3, 1, 9, 4, 9, 8, 2, 4, 2, 7, 3, 2, 2, 1, 3, 6, 2, 8, 8, 8, 4, 1, 3, 2, 7, 4, 4, 8, 8, 7, 8, 9, 3, 2, 3, 1, 4, 8, 9, 3, 6, 9, 4, 3, 9, 2, 7, 7, 7, 4, 4, 7, 6, 8, 8, 7, 7, 8, 9, 7, 7, 2, 2, 8, 2, 6, 6, 6, 6],
+        [6, 3, 7, 5, 2, 4, 4, 7, 9, 5, 7, 8, 9, 4, 8, 8, 4, 5, 5, 5, 4, 7, 2, 6, 2, 2, 9, 8, 2, 8, 6, 3, 2, 7, 2, 6, 6, 7, 9, 1, 6, 5, 2, 6, 5, 1, 4, 3, 2, 1, 2, 4, 2, 2, 4, 7, 6, 5, 2, 7, 9, 3, 3, 1, 1, 1, 3, 4, 5, 3, 7, 5, 7, 1, 3, 7, 7, 2, 9, 7, 3, 9, 2, 2, 1, 1, 9, 9, 6, 8, 9, 7, 5, 5, 7, 7, 7, 7, 3, 3, 5, 8, 7, 5, 5, 5, 8, 2, 9, 7, 6, 1, 6, 9, 1, 6, 6, 2, 6, 2, 3, 6, 3, 3, 6, 2, 1, 8, 8, 4, 4, 4, 6, 4, 4, 8, 8, 9, 8, 5, 1, 8, 3, 3, 9, 1, 5, 1, 5, 9, 8, 9, 5, 9, 8, 8, 8, 1, 3, 8, 8, 1, 6, 6, 6, 1, 3, 9, 4, 4, 4, 4, 4, 1, 4, 3, 9, 1, 9, 3],
+        [9, 9, 7, 7, 7, 6, 9, 4, 8, 5, 1, 9, 3, 3, 5, 8, 8, 6, 7, 9, 6, 3, 5, 2, 1, 6, 3, 9, 8, 1, 8, 6, 1, 7, 6, 1, 6, 1, 4, 4, 5, 6, 6, 2, 8, 8, 3, 6, 6, 6, 1, 1, 8, 9, 8, 8, 7, 7, 4, 3, 3, 3, 2, 5, 4, 4, 8, 2, 7, 7, 7, 4, 2, 3, 8, 6, 7, 5, 2, 3, 9, 8, 5, 4, 4, 4, 6, 6, 3, 3, 7, 9, 9, 5, 5, 7, 5, 9, 3, 6, 9, 9, 2, 4, 1, 7, 7, 9, 9, 9, 3, 9, 7, 6, 9, 9, 2, 2, 3, 2, 4, 6, 3, 4, 1, 9, 2, 4, 2, 5, 1, 1, 1, 6, 4, 2, 6, 4, 4, 5, 3, 3, 4, 4, 4, 5, 8, 8, 8, 3, 2, 1, 1, 2, 5, 1, 7, 5, 5, 5, 5, 2, 8, 1, 1, 5, 7, 7, 2, 1, 7, 1, 2, 2, 3, 2, 8, 8, 8, 5],
+        [6, 7, 1, 6, 4, 4, 4, 2, 9, 2, 2, 8, 9, 7, 4, 2, 7, 8, 3, 7, 6, 6, 1, 5, 8, 2, 2, 6, 7, 7, 9, 6, 4, 4, 8, 5, 9, 9, 1, 1, 1, 3, 1, 5, 4, 8, 8, 4, 4, 4, 6, 7, 5, 7, 4, 9, 9, 4, 8, 9, 1, 8, 5, 7, 4, 2, 5, 5, 6, 3, 8, 8, 8, 9, 1, 2, 8, 4, 3, 2, 6, 3, 3, 9, 7, 9, 6, 8, 9, 5, 2, 8, 4, 8, 8, 8, 5, 4, 6, 1, 1, 5, 5, 8, 1, 9, 5, 6, 5, 6, 1, 2, 6, 5, 5, 9, 4, 7, 7, 3, 3, 1, 3, 3, 4, 5, 1, 6, 3, 8, 5, 5, 1, 6, 7, 9, 1, 6, 6, 3, 8, 1, 5, 6, 2, 2, 4, 6, 7, 3, 1, 3, 7, 7, 7, 4, 2, 9, 1, 7, 7, 7, 3, 5, 1, 9, 3, 2, 9, 3, 3, 3, 9, 9, 3, 2, 2, 2, 2, 2],
+        [2, 2, 9, 6, 3, 8, 5, 3, 1, 8, 5, 8, 8, 9, 1, 5, 3, 9, 1, 4, 5, 1, 5, 4, 9, 2, 3, 3, 1, 9, 5, 2, 3, 7, 7, 7, 1, 1, 5, 6, 9, 1, 5, 6, 6, 7, 3, 8, 8, 6, 2, 1, 8, 8, 2, 5, 3, 4, 4, 4, 8, 4, 6, 6, 2, 2, 4, 4, 6, 5, 5, 2, 6, 7, 6, 2, 3, 7, 4, 7, 7, 5, 8, 5, 8, 5, 6, 2, 9, 9, 6, 3, 4, 2, 1, 3, 3, 3, 9, 7, 7, 5, 9, 8, 8, 1, 1, 4, 3, 9, 8, 6, 9, 6, 3, 5, 9, 1, 2, 2, 7, 3, 1, 8, 9, 1, 1, 3, 6, 8, 1, 5, 9, 3, 6, 6, 6, 8, 3, 5, 8, 4, 4, 1, 7, 3, 1, 7, 2, 9, 4, 7, 9, 6, 4, 5, 5, 6, 1, 2, 2, 4, 8, 8, 4, 4, 9, 9, 7, 2, 2, 9, 4, 7, 2, 4, 7, 7, 7, 7],
+        [7, 1, 1, 8, 7, 9, 8, 8, 3, 9, 9, 4, 4, 3, 3, 6, 8, 8, 7, 4, 5, 6, 2, 8, 2, 2, 4, 4, 8, 9, 3, 3, 1, 5, 3, 3, 4, 5, 3, 7, 2, 1, 7, 5, 6, 4, 5, 8, 3, 9, 3, 4, 5, 5, 5, 5, 5, 9, 9, 6, 6, 3, 1, 7, 3, 7, 3, 2, 5, 9, 9, 3, 8, 1, 4, 7, 5, 2, 2, 7, 5, 4, 2, 2, 8, 9, 7, 7, 1, 4, 2, 2, 7, 5, 7, 4, 2, 4, 5, 6, 3, 2, 9, 6, 8, 5, 5, 2, 2, 3, 6, 8, 7, 9, 9, 8, 8, 7, 6, 2, 9, 2, 4, 8, 3, 9, 1, 5, 4, 9, 2, 4, 6, 7, 3, 9, 5, 8, 5, 9, 8, 8, 7, 4, 4, 2, 2, 9, 1, 9, 6, 4, 4, 7, 8, 6, 1, 1, 1, 1, 7, 6, 7, 6, 3, 1, 6, 3, 6, 1, 6, 6, 1, 6, 6, 1, 8, 1, 1, 1]
+      ]
+    }
+  ]
 }
 ```
-
-</details>
 
 ---
 
@@ -487,6 +513,94 @@ GET /slot/spin/sequence?sequence=0,1,2,3,4,5,6,7,8,1,11,12,13,14,15,16,17,18&sta
 | `randomRNGUsed` | Calls that fell back to Mersenne Twister |
 | `sequenceCompleted` | `true` if sequence was fully consumed with no random fallback |
 | `sequenceExhausted` | `true` if the sequence ran out mid-spin |
+
+---
+
+## Architecture
+
+### Configuration File
+
+The entire game configuration lives in a single JSON file:
+
+```
+src/main/resources/config/cluster-reactor-config.json
+```
+
+`SlotContextFactory` (`config/SlotContextFactory`) reads this file at startup and deserialises it into a singleton `SlotContext` Spring bean. Changing the config file and restarting the application is all that is needed to change game behaviour — no code changes required for things like adjusting reel strips, pay table values, tile weights, or avalanche mode.
+
+Key top-level fields in the config:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `gameName` | String | Display name |
+| `slotId` / `version` | Integer | Game identifier and version |
+| `sharpRtp` | Map\<AvalancheMode, Double\> | Theoretical RTP per mode |
+| `gridDim` | `[reels, rows]` | Grid size — currently `[8, 8]` |
+| `tileIds` | Map\<String, List\<Integer\>\> | Symbol ID groups: `high`, `low`, `wild`, `blocker` |
+| `tileNames` | Map\<Integer, String\> | Human-readable symbol names |
+| `tileWeights` | TreeMap\<Integer, List\<Double\>\> | Weighted draw probabilities per recursion level (REGENERATE mode) |
+| `payTable` | Map\<Integer, TreeMap\<Integer, Double\>\> | Symbol ID → cluster-size thresholds → multiplier |
+| `payTableType` | `INTERVAL_BASED` | How the pay table is looked up (`floorEntry`) |
+| `minMatch` | Integer | Minimum cluster size for a win (5) |
+| `strategy` | `CLUSTERS_PAYS` | Win detection strategy |
+| `avalancheMode` | `REGENERATE` / `CASCADE` / `REROLL` | Cascade refill behaviour |
+| `minStake` | Double | Minimum bet unit ($0.10) |
+| `reelSets` | List\<ReelSet\> | Reel strip arrays — index 0 = main spin (blockers included), index 1 = reaction re-spin (no blockers) |
+| `reelSetIndexes` | TreeMap\<Integer, List\<Integer\>\> | Reel set candidates per recursion level |
+| `reelSetChances` | TreeMap\<Integer, List\<Double\>\> | Weighted selection chances for reel sets |
+| `neighbors` | `List<List<Integer>>` | Adjacency offsets for DFS — `[[0,1],[0,-1],[1,0],[-1,0]]` (4-directional) |
+| `wildMultipliers` | Map\<Integer, Double\> | Multiplier per wild symbol ID |
+| `wildMultipliersAggregations` | Map\<Integer, WildMultipliersAggregationType\> | How wild multipliers combine: `NONE`, `ADDITIVE`, `MULTIPLICATIVE` |
+
+---
+
+### Processor Chain Pattern
+
+The spin engine uses a **Chain of Responsibility** pattern. Every spin (main or cascade) runs the same ordered list of `SlotSpinProcessor` implementations — each one reads from and writes to the shared `SlotGameDto` state object.
+
+```
+SlotSpinProcessor (interface)
+    └── processSpin(spinData, slotContext, states, reelSetIndex,
+                   reelStopPositions, stake, stickyData, recursionLevel)
+```
+
+Processors are registered in `MySlotGame.initializeAndArrangeProcessors()`:
+
+```
+spinProcessors    → [P01, P02, P03, P04, P05, P06, P07]   (run every spin/cascade)
+postSpinProcessors → [P08]                                  (run only by gamble flow)
+```
+
+The loop in `SlotContext.createSlotSpin()` iterates `spinProcessors` sequentially — each processor decides internally whether to act based on `recursionLevel` and `avalancheMode`:
+
+```
+for (SlotSpinProcessor processor : spinProcessors) {
+    processor.processSpin(spinData, this, ...);
+}
+```
+
+The cascade recursion is **not** an external loop — P05 calls `slotContext.createSlotSpin(...)` directly, embedding the child `SlotGameDto` as an entry inside the parent's `payoutData`. This makes the spin result a **tree**, not a list. `SlotGameDto.linearize()` DFS-traverses the tree into the flat `List<SlotGameDto>` returned by the API.
+
+```
+SlotGameDto (root, recursionLevel=0)
+  └── payoutData
+        ├── SlotContactDto   (cluster win data)
+        ├── SlotExplodeFallDto (animation data)
+        └── SlotGameDto (cascade, recursionLevel=1)   ← embedded child
+              └── payoutData
+                    ├── SlotContactDto
+                    ├── SlotExplodeFallDto
+                    └── SlotGameDto (recursionLevel=2)
+                          └── ...
+```
+
+`linearize()` removes the embedded `SlotGameDto` children from `payoutData` after flattening, so each node in the response list only contains `contact` and `explode_fall` entries.
+
+**Adding a new processor** requires only:
+1. Implementing `SlotSpinProcessor`
+2. Registering it in `MySlotGame.initializeAndArrangeProcessors()`
+
+No other code changes are needed — the engine picks it up automatically.
 
 ---
 
