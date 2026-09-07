@@ -1,9 +1,6 @@
 package com.relax.reactor.service;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.relax.reactor.config.BaseDtoDeserializer;
 import com.relax.reactor.service.gamelogic.dto.SlotGameDto;
 import com.relax.reactor.service.gamelogic.dto.payout.BaseDto;
 import jakarta.annotation.PostConstruct;
@@ -82,14 +79,6 @@ public class SpinResultLogger {
                 LOGGER.debug("Loading original spin from file: {}", filePath);
 
                 String jsonContent = new String(Files.readAllBytes(Paths.get(filePath)));
-
-                ObjectMapper mapper = new ObjectMapper();
-
-                SimpleModule module = new SimpleModule();
-                module.addDeserializer(BaseDto.class, new BaseDtoDeserializer());
-                mapper.registerModule(module);
-
-                mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
                 return mapper.readValue(jsonContent, SlotGameDto.class);
             } else {

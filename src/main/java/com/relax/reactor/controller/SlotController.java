@@ -21,8 +21,7 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -36,18 +35,12 @@ import java.util.List;
 @RestController
 @RequestMapping("/slot")
 @Validated
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Tag(name = "Slot Game", description = "Slot machine game endpoints for spinning, gambling, and simulations")
 public class SlotController {
 
     private final SlotService slotService;
     private final ParameterParsingService parameterParsingService;
-
-    @Autowired
-    public SlotController(ParameterParsingService parameterParsingService, SlotService slotService) {
-        this.parameterParsingService = parameterParsingService;
-        this.slotService = slotService;
-    }
 
     @Operation(
             summary = "Get game settings",
